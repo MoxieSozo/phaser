@@ -1,2 +1,4 @@
-node_modules/*
-www/lib/*
+node_modules/
+platforms/
+npm-debug.log
+.DS_Store
