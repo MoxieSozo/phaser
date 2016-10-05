@@ -67,8 +67,8 @@
 				<div>
 					<h2><%- question %></h2>
 					<ul class="options">
-						<% _.each(options, function(k,v) { %>
-							<li><button type="button" class="user-answer" data-value="<%- v %>"> <%- k %> </button></li>
+						<% _.each(options, function(v,k) { %>
+							<li><button type="button" class="user-answer" data-value="<%- k %>"> <%- v %> </button></li>
 						<% }); %> 
 					</ul>
 					<input type="text" readonly value="<%- answer %>" id="the_answer" />
