@@ -3,6 +3,8 @@ var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
+var less = require('gulp-less');
+var path = require('path');
 var minifyCss = require('gulp-minify-css');
 var streamqueue = require('streamqueue');
 var rename = require('gulp-rename');
@@ -28,6 +30,19 @@ gulp.task('sass', function(done) {
 
 
 
+
+gulp.task('less', function(){
+  console.log( path.join(__dirname, 'less', 'includes'))
+	return gulp.src('build/less/screen.less')
+		.pipe(less({
+      paths: [ path.join(__dirname, 'less') ]
+		}))
+		.pipe(gulp.dest('www/css/'))
+})
+
+
+
+
 gulp.task('scripts', function(){
     return streamqueue({ objectMode: true },
         gulp.src('build/vendor/*.js'),
@@ -45,6 +60,7 @@ gulp.task('scripts', function(){
 
 gulp.task('watch', function() {
   gulp.watch('build/js/**/*.js', ['scripts'] );
+  //gulp.watch('build/less/*.less', ['less'] )
   //gulp.watch(paths.sass, ['sass']);
 });
 

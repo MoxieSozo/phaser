@@ -55,12 +55,12 @@ angular.module( 'postar')
 })
 
 
-angular.module( 'postar')
+angular.module( 'app.services')
 .service('AppService', [function(){
 
 }]);
 
-angular.module( 'postar')
+angular.module( 'app.services')
 .service( 'GameService', [function(){
 
 
@@ -115,6 +115,35 @@ angular.module( 'postar')
   return IS
 }])
 
+angular.module('app.services')
+
+.service( 'TriviaService', [function(){
+
+  var trivia = {
+  	questions: [
+  		{
+  			q: 'How much beer can an astronaut drink in space?',
+  			o: {
+  				"some": "Some",
+  				"lots": "Lots!",
+  				"none": "None :(",
+  			},
+  			a: "lots"
+  		},
+  		{
+  			q: 'Why is beer?',
+  			o: {
+  				"because": "Beacuse it is.",
+  				"notsure": "I have no idea.",
+  				"number": "Beer = 3197 x everything. ",
+  			},
+  			a: "because"
+  		}
+  	]
+  };
+  return trivia
+}]);
+
 angular.module( 'app.controllers' )
 .controller( 'AppController', ['$scope', '$http', 'AppService',
 function($scope, $http, AS){
@@ -122,11 +151,9 @@ function($scope, $http, AS){
 }])
 
 angular.module( 'app.controllers' )
-.controller( 'GameController', ['$scope', '$http', 'AppService','GameService',
-function($scope, $http, AS, GS){
-
+.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService',
+function($scope, $http, AS, GS, TS){
   function create_game(){
-
     GS.Game = {
     	preload: function() {
     		this.game.time.advancedTiming = true;
@@ -146,13 +173,8 @@ function($scope, $http, AS, GS){
     			"x": 300,
     			"y": 0
     		}
-
-    		// Pause menu
-    		//this.pause_label = this.add.text(this.w/2, 20, 'Pause', { font: '24px Arial', fill: '#fff' });
-    		//this.pause_label.inputEnabled = true;
-    		//this.pause_label.fixedToCamera = true;
-    		//this.pause_menu();
-
+    		this.challenges = TS.questions;
+    		this.challenges_complete = 0;
 
 
     		//set up background and ground layer
@@ -230,38 +252,27 @@ function($scope, $http, AS, GS){
       },
       pause: function() {
 
-    	// When the paus button is pressed, we pause the game
-    	//this.pause_label = this.add.text(this.w/2, 100, 'Resume', { font: '24px Arial', fill: '#fff' });
-    	this.pause_label.setText('Resume');
+      	// When the paus button is pressed, we pause the game
+      	//this.pause_label = this.add.text(this.w/2, 100, 'Resume', { font: '24px Arial', fill: '#fff' });
+      	this.pause_label.setText('Resume');
 
-    	this.paused = true;
-    	this.stopped = true;
-    	this.player.body.velocity.x = 0;
-    	this.player.animations.play('stand', 10, true);
+      	this.paused = true;
+      	this.stopped = true;
+      	this.player.body.velocity.x = 0;
+      	this.player.animations.play('stand', 10, true);
 
-    	// Then add the menu
-    	this.pause_menu_restart = this.add.text(this.w/2, 48, 'Restart', { font: '24px Arial', fill: '#fff' });
-    	this.pause_menu_restart.inputEnabled = true;
-    	this.pause_menu_restart.fixedToCamera = true;
-    	this.pause_menu_restart.events.onInputUp.add( function() { this.state.start('Game'); }, this);
+      	// Then add the menu
+      	this.pause_menu_restart = this.add.text(this.w/2, 48, 'Restart', { font: '24px Arial', fill: '#fff' });
+      	this.pause_menu_restart.inputEnabled = true;
+      	this.pause_menu_restart.fixedToCamera = true;
+      	this.pause_menu_restart.events.onInputUp.add( function() { this.state.start('Game'); }, this);
 
-    	this.pause_menu_quit = this.add.text(this.w/2, 72, 'Quit', { font: '24px Arial', fill: '#fff' })
-    	this.pause_menu_quit.inputEnabled = true;
-    	this.pause_menu_quit.fixedToCamera = true;
-    	this.pause_menu_quit.events.onInputUp.add( function() { window.location = "http://google.com"; }, this);
+      	this.pause_menu_quit = this.add.text(this.w/2, 72, 'Quit', { font: '24px Arial', fill: '#fff' })
+      	this.pause_menu_quit.inputEnabled = true;
+      	this.pause_menu_quit.fixedToCamera = true;
+      	this.pause_menu_quit.events.onInputUp.add( function() { window.location = "http://google.com"; }, this);
 
-
-    /*
-    	for (var i = 0; i < this.numAliens; i++) {
-          alien = this.aliens[i];
-
-          //physics properties
-          alien.body.velocity.x = 0;
-        }
-    */
-        //console.log( this.aliens );
-    /*
-
+    	// Stop the extras from floating by
         _.forEach(this.aliens.children, function(alien) {
     	    //console.log(alien);
     	    alien.body.velocity.x = 0;
@@ -276,19 +287,6 @@ function($scope, $http, AS, GS){
     	    //console.log(alien);
     	    weapon.body.velocity.x = 0;
         });
-    */
-
-
-    	//console.log( trivia );
-    /*
-    	menu = this.add.sprite(this.w/2, this.h/2, 'menu');
-    	menu.anchor.setTo(0.5, 0.5);
-
-    	// And a label to illustrate which menu item was chosen. (This is not necessary)
-    	var choiseLabel = this.add.text(this.w/2, this.h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
-    	choiseLabel.anchor.setTo(0.5, 0.5);
-    */
-
 
 
 
@@ -299,32 +297,125 @@ function($scope, $http, AS, GS){
       unpause: function() {
 
 
-    	// Remove the menu and the label
-    	this.pause_menu_restart.destroy();
-    	this.pause_menu_quit.destroy();
+      	// Remove the menu and the label
+      	this.pause_menu_restart.destroy();
+      	this.pause_menu_quit.destroy();
 
-    	// Unpause the game
+      	// Unpause the game
+      	this.paused = false;
+      	this.stopped = false;
+      	this.player.body.velocity.x = this.default_velocity.x;
+      	this.player.animations.play('walk', 3, true);
+
+
+      },
+      //
+      unfrozen: function() {
     	this.paused = false;
     	this.stopped = false;
     	this.player.body.velocity.x = this.default_velocity.x;
     	this.player.animations.play('walk', 3, true);
 
+      },
+      frozen: function() {
+      	this.paused = true;
+      	this.stopped = true;
+      	this.player.body.velocity.x = 0;
+
+    	  // Stop the extras from floating by
+        _.forEach(this.aliens.children, function(alien) {
+    	    //console.log(alien);
+    	    alien.body.velocity.x = 0;
+        });
+
+         _.forEach(this.hops.children, function(hop) {
+    	    //console.log(alien);
+    	    hop.body.velocity.x = 0;
+        });
+
+        _.forEach(this.weapons.children, function(weapon) {
+    	    //console.log(alien);
+    	    weapon.body.velocity.x = 0;
+        });
 
       },
+      challenge: function() {
+
+    	  this.frozen();
+    	  console.log( this.challenges );
+    	  //alert('you shall not pass!');
+    	  $('#challenge').removeClass('hide');
+
+    	  // templates
+
+        var get_question = function( data ){
+    		var q =  data[Math.floor(Math.random() * data.length)];
+    		  console.log( data, q );
+    		  return q;
+        };
+      	var current_question = get_question( this.challenges );
+      	console.log( current_question );
+
+      	var templates = {
+      		"gameover": _.template( $('.templates #gameover').html() ),
+      		"question": _.template( $('.templates #aQuestion').html() ),
+      		"options": _.template( $('.templates #options').html() ),
+      	};
+      	$('#challenge').append( templates.question({
+      		question: current_question.q,
+      		options: current_question.o,
+      		answer: current_question.a,
+      	}) );
+
+      	var $gi = this;
+
+      	$(document).on('click', 'button[data-value]', function() {
+      		var answer = $(document).find('#the_answer').val();
+
+      		console.log( $(this).data('value'), answer);
+
+      		if( $(this).data('value') === answer ) {
+      			$(this).addClass('correct');
+      			$gi.points += 100;
+      			$gi.maxDamage += 1;
+      			$gi.refreshStats();
+      		} else {
+      			$(this).addClass('false');
+      			$gi.maxDamage += -1;
+      			$gi.refreshStats();
+      		}
+
+      		setTimeout(function() {
+      			$('#challenge').addClass('hide');
+
+      			$gi.unfrozen();
+      		}, 3000);
+      	});
+
+
+      }, // challenge
       update: function() {
-    		var $gi = this;
+
+      	var $gi = this;
+
         //collision
         this.game.physics.arcade.collide(this.player, this.ground, this.playerHit, null, this);
         this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, null, this);
         this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
-    		this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
-    		this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
+      	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
+      	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
 
         //only respond to keys and keep the speed if the player is alive
         //we also don't want to do anything if the player is stopped for scratching or digging
         if(this.player.alive && !this.stopped) {
 
-          this.player.body.velocity.x = 300;
+          if( this.wraps == 1 && this.challenges_complete !== this.wraps ) {
+    	      this.challenges_complete = this.wraps;
+    	      this.challenge();
+
+          }
+
+          this.player.body.velocity.x = this.default_velocity.x;
 
           //We do a little math to determine whether the game world has wrapped around.
           //If so, we want to destroy everything and regenerate, so the game will remain random
@@ -373,7 +464,8 @@ function($scope, $http, AS, GS){
 
 
 
-      },
+
+      }, // update
 
     	display_stats : function(){
         var style1 = { font: "20px Arial", fill: "#ff0"};
@@ -394,10 +486,10 @@ function($scope, $http, AS, GS){
         this.pointsText.fixedToCamera = true;
         this.aliensText.fixedToCamera = true;
         this.shotsText.fixedToCamera = true;
-
     	},
 
       create_weapons : function(){
+
     	  this.firing = false;
 
     		this.weaponOptions = [
@@ -424,8 +516,10 @@ function($scope, $http, AS, GS){
 
         this.set_weapon(0);
 
-      },
+
+      }, // create_weapons
       set_weapon : function( key ){
+
     		$gi = this;
         this.weapon = this.game.add.weapon(30, 'bullet');
         this.weapon.enableBody = true;
@@ -457,7 +551,8 @@ function($scope, $http, AS, GS){
     			this.weapon.fire();
         }, this);
     	  this.weapon.resetShots();
-      },
+
+      }, // set_weapon
       build_buttons : function ( ){
     	  var $gi = this;
     	  $gi.buttons = {
@@ -664,9 +759,11 @@ function($scope, $http, AS, GS){
         weapon.body.collideWorldBounds = false;
       },
 
-      render: function(){
-        //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-      }
+      render: function()
+        {
+            //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
+        }
+
     }// END GAME
   }// END create_game
 

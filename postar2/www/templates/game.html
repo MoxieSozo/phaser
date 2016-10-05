@@ -1,5 +1,37 @@
 <ion-view >
  <ion-content >
     <div id = 'gameDiv'></div>
+
+
+    <div id="challenge" class="hide">
+    	<header>
+    		<h1>You shall not pass!</h1>
+    		<p>Answer the question correctly or suffer my wrath.</p>
+    	</header>
+
+    </div>
+
+    <div class="templates hide">
+    	<script type="text/template"  id="aQuestion">
+    		<div>
+    			<h2><%- question %></h2>
+    			<ul class="options">
+    				<% _.each(options, function(v,k) { %>
+    					<li><button type="button" class="user-answer" data-value="<%- k %>"> <%- v %> </button></li>
+    				<% }); %>
+    			</ul>
+    			<input type="text" readonly value="<%- answer %>" id="the_answer" />
+
+    		</div>
+    	</script>
+
+    	<script type="text/template"  id="option">
+    		<li><button type="button" class="user-answer" data-value="<%- k %>"> <%- v %> </button></li>
+    	</script>
+
+    </div>
+
+
+
   </ion-content>
 </ion-view>

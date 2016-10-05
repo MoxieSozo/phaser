@@ -1,4 +1,4 @@
-angular.module( 'postar')
+angular.module( 'app.services')
 .service('AppService', [function(){
 
 }]);
