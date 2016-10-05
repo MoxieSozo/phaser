@@ -56,6 +56,7 @@ InfiniteScroller.Game.prototype = {
 		this.game.world.bringToTop(this.grass);
 		//this.game.world.bringToTop(this.mounds);
 		this.game.world.bringToTop(this.ground);
+		this.game.physics.arcade.TILE_BIAS = 40; //will this fix the fall-through-the-floor problem?
 		
 		//enable physics on the player and ground
 		this.game.physics.arcade.enable(this.player);
