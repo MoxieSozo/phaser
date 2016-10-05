@@ -44,17 +44,17 @@ gulp.task('less', function(){
 
 
 gulp.task('scripts', function(){
-    return streamqueue({ objectMode: true },
-        gulp.src('build/vendor/*.js'),
-        gulp.src('build/js/app.js'),
-        gulp.src('build/js/routes.js'),
-        //gulp.src('build/js/filters.js'),
-        //gulp.src('build/js/directives.js'),
-        gulp.src('build/js/services/*.js'),
-        gulp.src('build/js/controllers/*.js')
-    )
-        .pipe(concat('app-min.js'))
-        .pipe(gulp.dest('www/js'));
+  return streamqueue({ objectMode: true },
+    gulp.src('build/vendor/*.js'),
+    gulp.src('build/js/app.js'),
+    gulp.src('build/js/routes.js'),
+    //gulp.src('build/js/filters.js'),
+    //gulp.src('build/js/directives.js'),
+    gulp.src('build/js/services/*.js'),
+    gulp.src('build/js/controllers/*.js')
+  )
+  .pipe(concat('app-min.js'))
+  .pipe(gulp.dest('www/js'));
 });
 
 
