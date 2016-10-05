@@ -1,16 +1,29 @@
 ## MicroStar GABF Poster App
 
 ### CLI Commands
-gulp
-ionic serve
+
+#### Install first 
+
+You should only have to run this once.
+
+1. npm install
+1. bower install
+
+#### Run the App 
+
+1. gulp
+1. ionic serve
 
 ### Assets
 
 ####JS
+
 /postar2/build/js
 
 ####Stylesheets
+
 /postar2/build/less
+**compiles to screen.css**
 
 ####Templates
 /postar2/www/templates
