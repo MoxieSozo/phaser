@@ -21,13 +21,8 @@ InfiniteScroller.Game.prototype = {
 			"x": 300,
 			"y": 0
 		}
-		
-		// Pause menu
-		//this.pause_label = this.add.text(this.w/2, 20, 'Pause', { font: '24px Arial', fill: '#fff' });
-		//this.pause_label.inputEnabled = true;
-		//this.pause_label.fixedToCamera = true;
-		//this.pause_menu();
-		
+		this.challenges = trivia.questions;
+		this.challenges_complete = 0;
 		
 		
 		//set up background and ground layer
@@ -125,18 +120,7 @@ InfiniteScroller.Game.prototype = {
 	this.pause_menu_quit.fixedToCamera = true;
 	this.pause_menu_quit.events.onInputUp.add( function() { window.location = "http://google.com"; }, this);
 	
-	
-/*
-	for (var i = 0; i < this.numAliens; i++) {
-      alien = this.aliens[i];
-
-      //physics properties
-      alien.body.velocity.x = 0;
-    }
-*/
-    //console.log( this.aliens );
-/*
-    
+	// Stop the extras from floating by
     _.forEach(this.aliens.children, function(alien) {
 	    //console.log(alien);
 	    alien.body.velocity.x = 0;
@@ -151,20 +135,7 @@ InfiniteScroller.Game.prototype = {
 	    //console.log(alien);
 	    weapon.body.velocity.x = 0;
     });
-*/
 
-	
-	//console.log( trivia );
-/*
-	menu = this.add.sprite(this.w/2, this.h/2, 'menu');
-	menu.anchor.setTo(0.5, 0.5);
-	
-	// And a label to illustrate which menu item was chosen. (This is not necessary)
-	var choiseLabel = this.add.text(this.w/2, this.h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
-	choiseLabel.anchor.setTo(0.5, 0.5);
-*/
-		
-	    
 
 	
 	// Add a input listener that can help us return from being paused
@@ -186,20 +157,111 @@ InfiniteScroller.Game.prototype = {
 	
 	
   },
+  unfrozen: function() {
+	this.paused = false;
+	this.stopped = false;
+	this.player.body.velocity.x = this.default_velocity.x;
+	this.player.animations.play('walk', 3, true);
+
+  },
+  frozen: function() {
+	this.paused = true;
+	this.stopped = true;
+	this.player.body.velocity.x = 0;
+	  
+	  // Stop the extras from floating by
+    _.forEach(this.aliens.children, function(alien) {
+	    //console.log(alien);
+	    alien.body.velocity.x = 0;
+    });
+    
+     _.forEach(this.hops.children, function(hop) {
+	    //console.log(alien);
+	    hop.body.velocity.x = 0;
+    });
+    
+    _.forEach(this.weapons.children, function(weapon) {
+	    //console.log(alien);
+	    weapon.body.velocity.x = 0;
+    });
+	 
+  },
+  challenge: function() {
+	  this.frozen();
+	  console.log( this.challenges );
+	  //alert('you shall not pass!');
+	  $('#challenge').removeClass('hide');
+	  
+	  // templates
+	
+	var get_question = function( data ){
+		var q =  data[Math.floor(Math.random() * data.length)];
+		console.log( data, q );
+		return q;
+	};
+	var current_question = get_question( this.challenges );
+	console.log( current_question );
+	
+	var templates = {
+		"gameover": _.template( $('.templates #gameover').html() ),
+		"question": _.template( $('.templates #aQuestion').html() ),
+		"options": _.template( $('.templates #options').html() ),
+	};
+	$('#challenge').append( templates.question({
+		question: current_question.q, 
+		options: current_question.o,
+		answer: current_question.a,
+	}) );
+	
+	var $gi = this;
+	
+	$(document).on('click', 'button[data-value]', function() {
+		var answer = $(document).find('#the_answer').val();
+		
+		console.log( $(this).data('value'), answer);
+		
+		if( $(this).data('value') === answer ) {
+			$(this).addClass('correct');
+			$gi.points += 100;
+			$gi.maxDamage += 1;
+			$gi.refreshStats();
+		} else {
+			$(this).addClass('false');
+			$gi.maxDamage += -1;
+			$gi.refreshStats();
+		}
+		
+		setTimeout(function() {
+			$('#challenge').addClass('hide');
+			
+			$gi.unfrozen();
+		}, 3000);
+		
+		
+	});
+  
+  },
   update: function() {
-		var $gi = this;
+	var $gi = this;
+    
     //collision
     this.game.physics.arcade.collide(this.player, this.ground, this.playerHit, null, this);
     this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, null, this);
     this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
-		this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
-		this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
+	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
+	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
     
     //only respond to keys and keep the speed if the player is alive
     //we also don't want to do anything if the player is stopped for scratching or digging
     if(this.player.alive && !this.stopped) {
       
-      this.player.body.velocity.x = 300;
+      if( this.wraps == 1 && this.challenges_complete !== this.wraps ) {
+	      this.challenges_complete = this.wraps;
+	      this.challenge();
+	     
+      }
+      
+      this.player.body.velocity.x = this.default_velocity.x;
       
       //We do a little math to determine whether the game world has wrapped around.
       //If so, we want to destroy everything and regenerate, so the game will remain random
