@@ -3,107 +3,189 @@ var InfiniteScroller = InfiniteScroller || {};
 InfiniteScroller.Game = function(){};
 
 InfiniteScroller.Game.prototype = {
-  preload: function() {
-      this.game.time.advancedTiming = true;
-    },
-  create: function() {
-
-
-    
-    //set some variables we need throughout the game
-    this.damage = 0;
-    this.wraps = 0;
-    this.points = 0;
-    this.wrapping = true;
-    this.stopped = false;
-    this.maxDamage = 5;
-    this.numAliens = 5;
-    
-    
-
-    //set up background and ground layer
-    this.game.world.setBounds(0, 0, 3500, this.game.height);
-    this.grass = this.add.tileSprite(0,this.game.height-40,this.game.world.width,20,'grass');
-    this.ground = this.add.tileSprite(0,this.game.height-20,this.game.world.width,70,'ground');
-    
-    //create player and walk animation
-    this.player = this.game.add.sprite(this.game.width/2, this.game.height-90, 'hunter');
-    this.player.scale.setTo(1,1);
-  	this.player.animations.add('walk', [4,5], 10, true);
-  	this.player.animations.add('stand', [2,3], 3, true);
-
-    
-    //create the aliens
-    this.generateAliens();
-    //and the toy mounds
-    this.generateHops();
-    this.create_weapons();
-    this.generateNewWeapon();
-    this.display_stats();
-    
-    //put everything in the correct order (the grass will be camoflauge),
-    //but the toy mounds have to be above that to be seen, but behind the
-    //ground so they barely stick up
-    this.game.world.bringToTop(this.grass);
-    //this.game.world.bringToTop(this.mounds);
-    this.game.world.bringToTop(this.ground);
-
-    //enable physics on the player and ground
-    this.game.physics.arcade.enable(this.player);
-    this.game.physics.arcade.enable(this.ground);
-
-    //player gravity
-    this.player.body.gravity.y = 1000;
-    
-    //so player can walk on ground
-    this.ground.body.immovable = true;
-    this.ground.body.allowGravity = false;
-
-    //properties when the player is digging, scratching and standing, so we can use in update()
-    var playerDigImg = this.game.cache.getImage('playerDig');
-    this.player.animations.add('dig');
-    this.player.digDimensions = {width: playerDigImg.width, height: playerDigImg.height};
-    
-    var playerScratchImg = this.game.cache.getImage('playerScratch');
-    this.player.animations.add('scratch');
-    this.player.scratchDimensions = {width: playerScratchImg.width, height: playerScratchImg.height};
-    
-    this.player.standDimensions = {width: this.player.width, height: this.player.height};
-    this.player.anchor.setTo(0.5, 1);
-    
-    //the camera will follow the player in the world
-    this.game.camera.follow(this.player);
-    
-    //play the walking animation
-    this.player.animations.play('walk', 3, true);
-
-    //move player with cursor keys
-    this.cursors = this.game.input.keyboard.createCursorKeys();
-    
-
-
-/*
-    //...or by swiping
-    this.swipe = this.game.input.activePointer;
-*/
-
-    //sounds
-    this.barkSound = this.game.add.audio('bark');
-    this.whineSound = this.game.add.audio('whine');
-    var RIGHT = 0, LEFT = 1;/* Divide the current tap x coordinate to half the game.width, floor it and there you go */
-    var $gi = this;
-/*
-    this.game.input.onTap.add(function(e){
-			if (Math.floor(e.x/($gi.game.width/2)) === RIGHT) {
-			  $gi.playerJump();
-	
-			}
-		}); 
-*/
+	preload: function() {
+		this.game.time.advancedTiming = true;
+	},
+	create: function() {
+		//set some variables we need throughout the game
+		this.damage = 0;
+		this.wraps = 0;
+		this.points = 0;
+		this.wrapping = true;
+		this.stopped = false;
+		this.maxDamage = 5;
+		this.numAliens = 5;
+		this.w = this.game.width;
+		this.h = this.game.height;
+		this.default_velocity = {
+			"x": 300,
+			"y": 0
+		}
 		
+		// Pause menu
+		//this.pause_label = this.add.text(this.w/2, 20, 'Pause', { font: '24px Arial', fill: '#fff' });
+		//this.pause_label.inputEnabled = true;
+		//this.pause_label.fixedToCamera = true;
+		//this.pause_menu();
+		
+		
+		
+		//set up background and ground layer
+		this.game.world.setBounds(0, 0, 3500, this.game.height);
+		this.grass = this.add.tileSprite(0,this.game.height-40,this.game.world.width,20,'grass');
+		this.ground = this.add.tileSprite(0,this.game.height-20,this.game.world.width,70,'ground');
+		
+		
+			
+		
+		//create player and walk animation
+		this.player = this.game.add.sprite(this.game.width/2, this.game.height-90, 'hunter');
+		this.player.scale.setTo(1,1);
+		this.player.animations.add('walk', [4,5], 10, true);
+		this.player.animations.add('stand', [2,3], 3, true);
+		
+		
+		//create the aliens
+		this.generateAliens();
+		//and the toy mounds
+		this.generateHops();
+		this.create_weapons();
+		this.generateNewWeapon();
+		this.display_stats();
+		
+		
+		
+		//put everything in the correct order (the grass will be camoflauge),
+		//but the toy mounds have to be above that to be seen, but behind the
+		//ground so they barely stick up
+		this.game.world.bringToTop(this.grass);
+		//this.game.world.bringToTop(this.mounds);
+		this.game.world.bringToTop(this.ground);
+		
+		//enable physics on the player and ground
+		this.game.physics.arcade.enable(this.player);
+		this.game.physics.arcade.enable(this.ground);
+		
+		//player gravity
+		this.player.body.gravity.y = 1000;
+		
+		//so player can walk on ground
+		this.ground.body.immovable = true;
+		this.ground.body.allowGravity = false;
+		
+		//properties when the player is digging, scratching and standing, so we can use in update()
+		var playerDigImg = this.game.cache.getImage('playerDig');
+		this.player.animations.add('dig');
+		this.player.digDimensions = {width: playerDigImg.width, height: playerDigImg.height};
+		
+		var playerScratchImg = this.game.cache.getImage('playerScratch');
+		this.player.animations.add('scratch');
+		this.player.scratchDimensions = {width: playerScratchImg.width, height: playerScratchImg.height};
+		
+		this.player.standDimensions = {width: this.player.width, height: this.player.height};
+		this.player.anchor.setTo(0.5, 1);
+		
+		//the camera will follow the player in the world
+		this.game.camera.follow(this.player);
+		
+		//play the walking animation
+		this.player.animations.play('walk', 3, true);
+		
+		//move player with cursor keys
+		this.cursors = this.game.input.keyboard.createCursorKeys();
+		
+		
+		//sounds
+		this.barkSound = this.game.add.audio('bark');
+		this.whineSound = this.game.add.audio('whine');
+		var RIGHT = 0, LEFT = 1;/* Divide the current tap x coordinate to half the game.width, floor it and there you go */
+		var $gi = this;
+			
 		this.build_buttons( );
   },
-  
+  pause: function() {
+		
+	// When the paus button is pressed, we pause the game		
+	//this.pause_label = this.add.text(this.w/2, 100, 'Resume', { font: '24px Arial', fill: '#fff' });
+	this.pause_label.setText('Resume');
+	
+	this.paused = true;
+	this.stopped = true;
+	this.player.body.velocity.x = 0;
+	this.player.animations.play('stand', 10, true);
+	
+	// Then add the menu
+	this.pause_menu_restart = this.add.text(this.w/2, 48, 'Restart', { font: '24px Arial', fill: '#fff' });
+	this.pause_menu_restart.inputEnabled = true;
+	this.pause_menu_restart.fixedToCamera = true;
+	this.pause_menu_restart.events.onInputUp.add( function() { this.state.start('Game'); }, this);
+	
+	this.pause_menu_quit = this.add.text(this.w/2, 72, 'Quit', { font: '24px Arial', fill: '#fff' })
+	this.pause_menu_quit.inputEnabled = true;
+	this.pause_menu_quit.fixedToCamera = true;
+	this.pause_menu_quit.events.onInputUp.add( function() { window.location = "http://google.com"; }, this);
+	
+	
+/*
+	for (var i = 0; i < this.numAliens; i++) {
+      alien = this.aliens[i];
+
+      //physics properties
+      alien.body.velocity.x = 0;
+    }
+*/
+    //console.log( this.aliens );
+/*
+    
+    _.forEach(this.aliens.children, function(alien) {
+	    //console.log(alien);
+	    alien.body.velocity.x = 0;
+    });
+    
+     _.forEach(this.hops.children, function(hop) {
+	    //console.log(alien);
+	    hop.body.velocity.x = 0;
+    });
+    
+    _.forEach(this.weapons.children, function(weapon) {
+	    //console.log(alien);
+	    weapon.body.velocity.x = 0;
+    });
+*/
+
+	
+	//console.log( trivia );
+/*
+	menu = this.add.sprite(this.w/2, this.h/2, 'menu');
+	menu.anchor.setTo(0.5, 0.5);
+	
+	// And a label to illustrate which menu item was chosen. (This is not necessary)
+	var choiseLabel = this.add.text(this.w/2, this.h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
+	choiseLabel.anchor.setTo(0.5, 0.5);
+*/
+		
+	    
+
+	
+	// Add a input listener that can help us return from being paused
+	//this.input.onDown.add(this.unpause, self);
+	
+  },
+  unpause: function() {
+  	
+		
+	// Remove the menu and the label
+	this.pause_menu_restart.destroy();
+	this.pause_menu_quit.destroy();
+			
+	// Unpause the game
+	this.paused = false;
+	this.stopped = false;
+	this.player.body.velocity.x = this.default_velocity.x;
+	this.player.animations.play('walk', 3, true);
+	
+	
+  },
   update: function() {
 		var $gi = this;
     //collision
@@ -281,6 +363,17 @@ InfiniteScroller.Game.prototype = {
     $gi.buttons.fire.scale.setTo( 1.5, 1.5 );
     $gi.buttons.fire.onInputDown.add(function(e ){ }, this);
     $gi.buttons.fire.onInputUp.add(function(){ }, this);
+    
+    $gi.pause_label = $gi.add.text(this.w/2, 20, 'Pause', { font: '24px Arial', fill: '#fff' });
+	$gi.pause_label.inputEnabled = true;
+	$gi.pause_label.fixedToCamera = true;
+	$gi.pause_label.events.onInputUp.add( function() {
+		if( this.stopped !== true ) {
+			this.pause();
+		} else {
+			this.unpause();
+		}
+	}, this);
 
 
   },
