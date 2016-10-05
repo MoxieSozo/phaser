@@ -1,0 +1,22 @@
+{
+  "name": "scrolling",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Moxie Sozo <accounts@moxiesozo.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/moxiemonkshood/phaser",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "lodash": "^4.16.3"
+  }
+}
