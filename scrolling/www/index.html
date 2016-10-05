@@ -9,16 +9,43 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<script type="text/javascript" src="js/phaser.min.js"></script>
 		<script type="text/javascript" src="lib/lodash/dist/lodash.min.js"></script>
+		<script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="js/trivia.js"></script>
 		<script type="text/javascript" src="js/Boot.js"></script>
 		<script type="text/javascript" src="js/Preload.js"></script>
 		<script type="text/javascript" src="js/Game.js"></script>
-		<script type="text/javascript" src="js/trivia.js"></script>
+		
 
 		<style>
 		  body {
 		    padding: 0px;
 		    margin: 0px;
 		  }
+		  #challenge {
+			  display:block;
+			  position: absolute;
+			  z-index: 9999;
+			  top: 10%;
+			  bottom: 10%;
+			  left: 10%;
+			  right: 10%;
+			  width: 80%;
+			  height: 80%;
+			  background: #FFF;
+			  color: #444;
+		  }
+		  .hide {
+			  display:none !important;
+		  }
+		  .correct {
+			  background: green;
+			  color: white;
+		  }
+		   .false {
+			  background: red;
+			  color: white;
+		  }
+
 		  </style>
 	</head>
 
@@ -26,5 +53,35 @@
 		<!-- include the main game file -->
 		<script type="text/javascript" src="cordova.js"></script>
 		<script src="js/main.js"></script>
+		
+		<div id="challenge" class="hide">
+			<header>
+				<h1>You shall not pass!</h1>
+				<p>Answer the question correctly or suffer my wrath.</p>
+			</header>
+
+		</div>
+		
+		<div class="templates hide">
+			<script type="text/template"  id="aQuestion">
+				<div>
+					<h2><%- question %></h2>
+					<ul class="options">
+						<% _.each(options, function(v,k) { %>
+							<li><button type="button" class="user-answer" data-value="<%- k %>"> <%- v %> </button></li>
+						<% }); %> 
+					</ul>
+					<input type="text" readonly value="<%- answer %>" id="the_answer" />
+					
+				</div>
+			</script>
+			
+			<script type="text/template"  id="option">
+				<li><button type="button" class="user-answer" data-value="<%- k %>"> <%- v %> </button></li>
+			</script>
+		
+		</div>
+		
+		
 	</body>
 </html>
