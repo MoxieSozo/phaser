@@ -8,31 +8,38 @@ InfiniteScroller.Game.prototype = {
     },
   create: function() {
 
+
+    
+    //set some variables we need throughout the game
+    this.damage = 0;
+    this.wraps = 0;
+    this.points = 0;
+    this.wrapping = true;
+    this.stopped = false;
+    this.maxDamage = 5;
+    this.numAliens = 5;
+    
+    
+
     //set up background and ground layer
     this.game.world.setBounds(0, 0, 3500, this.game.height);
-    this.grass = this.add.tileSprite(0,this.game.height-50,this.game.world.width,70,'grass');
+    this.grass = this.add.tileSprite(0,this.game.height-40,this.game.world.width,20,'grass');
     this.ground = this.add.tileSprite(0,this.game.height-20,this.game.world.width,70,'ground');
     
     //create player and walk animation
     this.player = this.game.add.sprite(this.game.width/2, this.game.height-90, 'hunter');
-    this.player.scale.setTo(1.5,1.5);
+    this.player.scale.setTo(1,1);
   	this.player.animations.add('walk', [4,5], 10, true);
   	this.player.animations.add('stand', [2,3], 3, true);
 
-    this.weapon = this.game.add.weapon(30, 'bullet');
-    this.weapon.enableBody = true;
-    this.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-    this.weapon.bulletAngleOffset = 90;
-    this.weapon.bulletSpeed = 1000;
-    this.weapon.fireRate = 100;
-    this.weapon.bulletAngleVariance = 10;
-    this.weapon.trackSprite(this.player, 54, -40, true);
-    this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
     
     //create the aliens
     this.generateAliens();
     //and the toy mounds
-    //this.generateMounds();
+    this.generateHops();
+    this.create_weapons();
+    this.generateNewWeapon();
+    this.display_stats();
     
     //put everything in the correct order (the grass will be camoflauge),
     //but the toy mounds have to be above that to be seen, but behind the
@@ -75,70 +82,36 @@ InfiniteScroller.Game.prototype = {
     
 
 
+/*
     //...or by swiping
     this.swipe = this.game.input.activePointer;
+*/
 
     //sounds
     this.barkSound = this.game.add.audio('bark');
     this.whineSound = this.game.add.audio('whine');
-    
-    //set some variables we need throughout the game
-    this.scratches = 0;
-    this.wraps = 0;
-    this.points = 0;
-    this.wrapping = true;
-    this.stopped = false;
-    this.maxScratches = 5;
-    
-    //create an array of possible toys that can be gathered from toy mounds
-    //var bone = this.game.add.sprite(0, this.game.height-130, 'bone');
-    //var ball = this.game.add.sprite(0, this.game.height-130, 'ball');
-    //bone.visible = false;
-   //ball.visible = false;
-   // this.toys = [bone, ball];
-    //this.currentToy = bone;
-    
-    //stats
-    var style1 = { font: "20px Arial", fill: "#ff0"};
-    var t1 = this.game.add.text(10, 20, "Kills:", style1);
-    var t2 = this.game.add.text(this.game.width-300, 20, "Life:", style1);
-    t1.fixedToCamera = true;
-    t2.fixedToCamera = true;
-
-    var style2 = { font: "26px Arial", fill: "#00ff00"};
-    this.pointsText = this.game.add.text(80, 18, "", style2);
-    this.aliensText = this.game.add.text(this.game.width-50, 18, "", style2);
-    this.refreshStats();
-    this.pointsText.fixedToCamera = true;
-    this.aliensText.fixedToCamera = true;
-
     var RIGHT = 0, LEFT = 1;/* Divide the current tap x coordinate to half the game.width, floor it and there you go */
     var $gi = this;
-    this.game.input.onTap.add(function(e){
-	    		
 /*
-		  if (Math.floor(e.x/($gi.game.width/2)) === LEFT) {
-			  $gi.playerJump();
-			}
-*/
+    this.game.input.onTap.add(function(e){
 			if (Math.floor(e.x/($gi.game.width/2)) === RIGHT) {
 			  $gi.playerJump();
-
+	
 			}
-/*
-*/
 		}); 
-    
-
+*/
+		
+		this.build_buttons( );
   },
   
   update: function() {
 		var $gi = this;
     //collision
     this.game.physics.arcade.collide(this.player, this.ground, this.playerHit, null, this);
-    this.game.physics.arcade.collide(this.player, this.aliens, this.playerBit, null, this);
+    this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, null, this);
     this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
-   // this.game.physics.arcade.overlap(this.player, this.mounds, this.collect, this.checkDig, this);
+		this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
+		this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
     
     //only respond to keys and keep the speed if the player is alive
     //we also don't want to do anything if the player is stopped for scratching or digging
@@ -156,27 +129,32 @@ InfiniteScroller.Game.prototype = {
         this.wrapping = true;
         this.aliens.destroy();
         this.generateAliens();
-        //this.mounds.destroy();
-        //this.generateMounds();
-        
+        this.hops.destroy();
+        this.generateHops();
+        this.weapons.destroy();
+        this.generateNewWeapon();
+
         //put everything back in the proper order
-        this.game.world.bringToTop(this.grass);
-        //this.game.world.bringToTop(this.mounds);
-        this.game.world.bringToTop(this.ground);
+//         this.game.world.bringToTop(this.grass);
+//         this.game.world.bringToTop(this.ground);
+        this.game.world.bringToTop(this.hops);
+        this.game.world.bringToTop(this.buttons);
+        this.game.world.bringToTop(this.weapons);
+        
       }
       else if(this.player.x >= this.game.width) {
         this.wrapping = false;
       }
       
-      //take the appropriate action for swiping up or pressing up arrow on keyboard
-      //we don't wait until the swipe is finished (this.swipe.isUp),
-      //  because of latency problems (it takes too long to jump before hitting a alien)
       if ( this.cursors.up.isDown) {
+	      
         this.playerJump();
       }
 
-      if (( this.swipe.isDown && (this.swipe.positionDown.x > this.game.width / 2)) || this.fireButton.isDown) {
+      if ( this.fireButton.isDown || this.firing ) {
 		    this.weapon.fire();
+		    this.refreshStats();
+		    
       }
 
     
@@ -189,10 +167,129 @@ InfiniteScroller.Game.prototype = {
 
 
   },
+
+	display_stats : function(){
+    var style1 = { font: "20px Arial", fill: "#ff0"};
+    var t1 = this.game.add.text(10, 20, "Points:", style1);
+    t1.fixedToCamera = true;
+    var t2 = this.game.add.text(this.game.width-100, 20, "Life:", style1);
+    t2.fixedToCamera = true;
+
+    var t3 = this.game.add.text(this.game.width-220, 20, "Shots:", style1);
+    t3.fixedToCamera = true;
+
+
+    var style2 = { font: "26px Arial", fill: "#00ff00"};
+    this.pointsText = this.game.add.text(80, 18, "", style2);
+    this.aliensText = this.game.add.text(this.game.width-50, 18, "", style2);
+    this.shotsText = this.game.add.text(this.game.width-150, 18, "1", style2);
+    this.refreshStats();
+    this.pointsText.fixedToCamera = true;
+    this.aliensText.fixedToCamera = true;
+    this.shotsText.fixedToCamera = true;
+		
+	},
+
+  create_weapons : function(){
+	  this.firing = false;
+
+		this.weaponOptions = [
+		    { "id" : "single",
+			    "fireRate" : 100,
+			    "fireLimit" : 100,
+			    "bulletAngleVariance" : 0,
+			    'automatic': false
+			    
+		    },
+		    { "id" : "automatic",
+			    "fireRate" : 100,
+			    "fireLimit" : 100,
+			    "bulletAngleVariance" : 10,
+			    "automatic" : true,
+		    },
+		    { "id" : "automatic_spread",
+			    "fireRate" : 100,
+			    "fireLimit" : 100,
+			    "bulletAngleVariance" : 10,
+			    "automatic" : true,
+		    },
+		  ]
+		
+    this.set_weapon(0);
+
+  },
+  set_weapon : function( key ){
+		$gi = this;
+    this.weapon = this.game.add.weapon(30, 'bullet');
+    this.weapon.enableBody = true;
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
+    this.weapon.bulletAngleOffset = 90;
+    this.weapon.bulletSpeed = 1000;
+    if(typeof ( key ) === 'string' ){
+			var option =  _.find( this.weaponOptions, function( o ){
+			  return o.id === key;
+		  });
+		}
+    if(typeof ( key ) === 'number' ) option = this.weaponOptions[key];
+		 
+	  this.currentWeapon = option;
+	  _.each( option, function ( o , k ){
+		  $gi.weapon[k] = o;
+	  })
+/*
+
+    this.weapon.fireRate = 100;
+    this.weapon.fireLimit = 10;
+    this.weapon.bulletAngleVariance = 10;
+*/
+
+    this.weapon.trackSprite(this.player, 54, -40, true);
+    this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    this.fireButton.onDown.add(function(e ){
+	    console.log( e )
+			this.weapon.fire();
+    }, this);
+	  this.weapon.resetShots();
+  },
+  build_buttons : function ( ){
+	  var $gi = this;
+	  $gi.buttons = {
+		  up : {},
+		  fire : {}
+	  }
+    $gi.buttons.up = $gi.game.add.button($gi.game.width - 50, $gi.world.height - 50, 'buttons', (function(){}), $gi, 4,4,5);
+    $gi.buttons.up.onInputUp.add(function(e ){
+			$gi.playerJump();	 
+    }, this);
+    $gi.buttons.up.onInputDown.add(function(e ){
+			$gi.playerJump();	 
+    }, this);
+		$gi.buttons.up.fixedToCamera = true;
+    $gi.buttons.up.scale.setTo( 1.5, 1.5 );
+    $gi.buttons.up.onInputDown.add(function(e ){ }, this);
+    $gi.buttons.up.onInputUp.add(function(){ }, this);
+
+    $gi.buttons.fire = $gi.game.add.button(0, $gi.world.height - 50, 'buttons', (function(){}), $gi, 4,4,5);
+    $gi.buttons.fire.onInputDown.add(function(e ){
+	    $gi.firing = true;
+			$gi.weapon.fire();
+    }, this);
+    $gi.buttons.fire.onInputUp.add(function(e ){
+	    this.firing = false;
+    }, this);
+		$gi.buttons.fire.fixedToCamera = true;
+    $gi.buttons.fire.scale.setTo( 1.5, 1.5 );
+    $gi.buttons.fire.onInputDown.add(function(e ){ }, this);
+    $gi.buttons.fire.onInputUp.add(function(){ }, this);
+
+
+  },
+
   //show updated stats values
   refreshStats: function() {
     this.pointsText.text = this.points;
-    this.aliensText.text = this.maxScratches - this.scratches;
+    this.aliensText.text = this.maxDamage - this.damage;
+    this.shotsText.text = this.weapon.fireLimit -  this.weapon.shots;
   },
   playerHit: function(player, blockedLayer) {
     if(player.body.touching.right) {
@@ -207,61 +304,76 @@ InfiniteScroller.Game.prototype = {
 		this.refreshStats();
   },
   //the player has just been bitten by a alien
-  playerBit: function(player, alien) {
-    //remove the alien that bit our player so it is no longer in the way
-    alien.destroy();
-    
-    //update our stats
-    this.scratches++;
-    this.refreshStats();
-    
-    //change sprite image
-    //this.player.loadTexture('playerScratch');
-    this.player.animations.play('stand', 10, true);
-    
-    //play audio
-    this.whineSound.play();
-    
-    //wait a couple of seconds for the scratch animation to play before continuing
-    this.stopped = true;
-    this.player.body.velocity.x = 0;
-    var $gi = this;
-    this.game.time.events.add(Phaser.Timer.SECOND * 2, function(){
-	    this.stopped = false;
-	    $gi.player.animations.play('walk');
-			$gi.player.body.velocity.x = 300;
-    }, this);
+  playerDamage: function(player, alien) {
+	  if(player.body.touching.down){
+	    //remove the alien that bit our player so it is no longer in the way
+	    this.points++;
+	    this.refreshStats();
+	    alien.body.velocity.y = 100;
+	    alien.body.velocity.x = 0;
+	  }else{
+	    //remove the alien that bit our player so it is no longer in the way
+	    alien.destroy();
+	    
+	    //update our stats
+	    this.damage++;
+	    this.refreshStats();
+	    
+			if(this.damage >= this.maxDamage){
+				this.stopped = true;
+				this.player.body.velocity.x = 0;
+				this.player.animations.play('stand', 10, true);
+		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2, "Game Over", { font: "20px Arial", fill: "#ff0"});
+		    gO.fixedToCamera = true;
+	
+			  var $gi = this;
+		    $gi.start_new = $gi.game.add.button($gi.game.width  / 2, $gi.world.height  / 2, 'buttons', (function(){}), $gi, 4,4,5);
+		    $gi.start_new.onInputDown.add(function(e ){
+					this.state.start('Game');
+		    }, this);
+				$gi.start_new.fixedToCamera = true;
+		    $gi.start_new.scale.setTo( 1.5, 1.5 );
+	
+				return false;
+			}
+		    
+	    //change sprite image
+	    //this.player.loadTexture('playerScratch');
+	    this.player.animations.play('stand', 10, true);
+	    
+	    //play audio
+	    this.whineSound.play();
+	    
+	    //wait a couple of seconds for the scratch animation to play before continuing
+	    this.stopped = true;
+	    this.player.body.velocity.x = 0;
+	    var $gi = this;
+	    this.game.time.events.add(Phaser.Timer.SECOND * 1, function(){
+		    this.stopped = false;
+		    $gi.player.animations.play('walk');
+				$gi.player.body.velocity.x = 300;
+	    }, this);
+	
+		  
+	  }
+  },
+  
+  //the player is collecting a toy from a mound
+  collectHops: function(player, hop) {
+    this.hops.remove( hop );
+    hop.kill();
+		this.points += 1;
+		this.refreshStats();
   },
   //the player is collecting a toy from a mound
-  collect: function(player, mound) {
-    //this is called continuously while player is on mound, but we only want to do it once
-    if (!this.stopped) {
-      //change image and update the body size for the physics engine
-      //this.player.loadTexture('playerDig');
-      this.player.animations.play('dig', 10, true);
-      this.player.body.setSize(this.player.digDimensions.width, this.player.digDimensions.height);
-    
-      //we can't remove the toy mound until digging is finished, so we have to set a variable for
-      //the function called from the timer (below)
-      this.currentMound = mound;
-    
-      //we stop a couple of seconds for the dig animation to play
-      this.stopped = true;
-      this.player.body.velocity.x = 0;
-      this.game.time.events.add(Phaser.Timer.SECOND * 2, this.playerDig, this);
-    }
+  weaponUp: function(player, weapon) {
+    this.weapons.remove( weapon );
+    weapon.kill();
+    this.set_weapon( 'automatic' );
   },
+	// you lost. dang. 
   gameOver: function() {
     this.game.state.start('Game');
-  },
-  //checks to see that the player is swiping down or pressing a down arrow while on a toy mound
-  checkDig: function() {
-    if (this.cursors.down.isDown || (this.swipe.isDown && (this.swipe.position.y > this.swipe.positionDown.y))) {
-      return true;
-    }
-    else {
-      return false;
-    }
   },
   playerJump: function() {
     //when the ground is a sprite, we need to test for "touching" instead of "blocked"
@@ -269,103 +381,44 @@ InfiniteScroller.Game.prototype = {
       this.player.body.velocity.y -= 700;
     }    
   },
-  playerDig: function() {
-    //play audio
-    this.barkSound.play();
-
-    //grab the location before we destroy the toy mound so we can place the toy
-    var x = this.currentMound.x;
-  
-    //remove toy the mound sprite now that the toy is collected
-    this.currentMound.destroy();
+  generateHops: function() {
+	  
+    this.hops = this.game.add.group();
     
-    //refresh our points stats
-    this.points += 5;
-    this.refreshStats();
-    
-    //randomly pull a toy from the array
-    this.currentToy = this.toys[ Math.floor( Math.random() * this.toys.length ) ];
-    
-    //make the toy visible where the mound used to be
-    this.currentToy.visible = true;
-    this.currentToy.x = x;
-    
-    //and make it disappear again after one second
-    this.game.time.events.add(Phaser.Timer.SECOND, this.currentToyInvisible, this);
-    
-    //We switch back to the standing version of the player
-    //this.player.loadTexture('dog');
-    this.player.animations.play('walk');
-    this.player.body.setSize(this.player.standDimensions.width, this.player.standDimensions.height);
-    this.stopped = false;
-  },
-  currentToyInvisible: function() {
-    this.currentToy.visible = false;
-  },
-  playerScratch: function() {
-    this.stopped = false;
-    
-    if (this.scratches >= 5) {
-      //set to dead (even though our player isn't actually dead in this game, just running home)
-      //doesn't affect rendering
-      this.player.alive = false;
-      
-      //destroy everything before player runs away so there's nothing in the way
-      this.aliens.destroy();
-      //this.mounds.destroy();
-
-      //We switch back to the standing version of the player
-      //this.player.loadTexture('dog');
-      this.player.animations.play('walk', 10, true); //frame rate is faster for running
-      this.player.body.setSize(this.player.standDimensions.width, this.player.standDimensions.height);
-      
-      //...then run home
-      this.player.anchor.setTo(.5, 1);
-      this.player.scale.x = -1;
-      this.player.body.velocity.x = -1000;
-
-      //we want the player to run off the screen in this case
-      this.game.camera.unfollow();
-
-      //go to gameover after a few miliseconds
-      this.game.time.events.add(1500, this.gameOver, this);
-    } else {
-      //change image and update the body size for the physics engine
-      //this.player.loadTexture('dog');
-      this.player.animations.play('walk', 3, true);
-      this.player.body.setSize(this.player.standDimensions.width, this.player.standDimensions.height);
-    }
-  },
-  generateMounds: function() {
-    this.mounds = this.game.add.group();
-
     //enable physics in them
-    this.mounds.enableBody = true;
+    this.hops.enableBody = true;
 
     //phaser's random number generator
-    var numMounds = this.game.rnd.integerInRange(0, 5)
-    var mound;
+    var numHops = this.game.rnd.integerInRange(1, 10)
+    var hop;
 
-    for (var i = 0; i < numMounds; i++) {
+    for (var i = 0; i < numHops; i++) {
       //add sprite within an area excluding the beginning and ending
       //  of the game world so items won't suddenly appear or disappear when wrapping
       var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
-      mound = this.mounds.create(x, this.game.height-75, 'mound');
-      mound.body.velocity.x = 0;
-    }
+      var y = this.game.rnd.integerInRange(this.game.height - 100, ( this.game.world.height - this.game.height) -200 );
+      hop = this.hops.create(x, y, 'hop');
 
+      //physics properties
+      hop.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
+      hop.scale.setTo(1, 1);
+      hop.body.immovable = true;
+      hop.body.collideWorldBounds = false;
+			hop.animations.add('play', null, 10, true);
+			hop.animations.play( 'play' );
+    }
   },
   generateAliens: function() {
+    var alien;
     this.aliens = this.game.add.group();
     
     //enable physics in them
     this.aliens.enableBody = true;
 
     //phaser's random number generator
-    var numAliens = this.game.rnd.integerInRange(1, 5)
-    var alien;
+	  this.numAliens += 2;
 
-    for (var i = 0; i < numAliens; i++) {
+    for (var i = 0; i < this.numAliens; i++) {
       //add sprite within an area excluding the beginning and ending
       //  of the game world so items won't suddenly appear or disappear when wrapping
       var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
@@ -379,6 +432,20 @@ InfiniteScroller.Game.prototype = {
       alien.body.collideWorldBounds = false;
     }
   },
+
+  generateNewWeapon: function() {
+    var weapon;
+    this.weapons = this.game.add.group();
+    this.weapons.enableBody = true;
+    var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
+    var y = this.game.rnd.integerInRange(this.game.height - 100, this.game.world.height - this.game.height );
+    weapon = this.weapons.create(x, y, 'bullet');
+    weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
+    weapon.scale.setTo(.5, .5);
+    weapon.body.immovable = true;
+    weapon.body.collideWorldBounds = false;
+  },
+
   render: function()
     {
         //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");   

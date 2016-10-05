@@ -13,9 +13,11 @@ InfiniteScroller.Preload.prototype = {
     this.load.setPreloadSprite(this.preloadBar);
 
     //load game assets
-    this.load.spritesheet('hunter', 'assets/images/dude.png', 32, 48);
+    this.load.spritesheet('hunter', 'assets/images/astronaut.sprite.png', 50,50);
     this.load.spritesheet('playerScratch', 'assets/images/dog_scratch.png', 116, 100, 2);
     this.load.spritesheet('playerDig', 'assets/images/dog_dig.png', 129, 100, 2);
+    this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
+    this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
     this.load.image('bullet', 'assets/images/bullet.png');
     this.load.image('ground', 'assets/images/ground.png');
     this.load.image('grass', 'assets/images/grass.png');
