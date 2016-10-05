@@ -60,7 +60,7 @@ gulp.task('scripts', function(){
 
 gulp.task('watch', function() {
   gulp.watch('build/js/**/*.js', ['scripts'] );
-  //gulp.watch('build/less/*.less', ['less'] )
+  gulp.watch('build/less/*.less', ['less'] )
   //gulp.watch(paths.sass, ['sass']);
 });
 

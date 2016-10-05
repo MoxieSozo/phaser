@@ -153,6 +153,7 @@ function($scope, $http, AS){
 angular.module( 'app.controllers' )
 .controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService',
 function($scope, $http, AS, GS, TS){
+
   function create_game(){
     GS.Game = {
     	preload: function() {
