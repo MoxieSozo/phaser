@@ -1071,7 +1071,6 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       answer_challenge : function($answer, $correct_answer ){
         $scope.my_answer = $answer;
         var $gi = this;
-        return false;
         if($answer === $correct_answer){
     			$gi.points += 100;
     			$gi.maxDamage += 1;

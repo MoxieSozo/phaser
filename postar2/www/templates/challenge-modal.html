@@ -6,9 +6,7 @@
 	  <div class = 'cloud'>
   	  <img src = 'assets/images/cloud-1.png'/>
 	  </div>
-	  <div class = 'hunter'>
-  	  <img src = 'assets/images/astronaut.png'/>
-	  </div>
+	  <div class = 'hunter'> </div>
     <div class = 'my_answer bar bar-balanced' ng-show = "my_answer && my_answer !== current_question.a">
       <h4 ng-show="my_answer && my_answer !== current_question.a">Dang! <span>Sorry, You Lose 1 Life</span></h4>
     </div>
@@ -20,7 +18,7 @@
 		<ol>
 			<li ng-repeat='( k, v )  in current_question.o'>
 			  <button class = 'button button-small' ng-click = 'game.answer_challenge( k, current_question.a )'>
-			    {{v}} {{k}}
+			    {{v}}
 			    <i class = 'ion-checkmark ' ng-class="{ 'balanced' : current_question.a == k}" ng-show="my_answer && current_question.a == k"></i>
 			    <i class = 'ion-checkmark assertive' ng-if='my_answer == k && current_question.a !== k' ></i>
 			  </button>

@@ -121,25 +121,31 @@ body {
 }
 .challenge-modal .castle {
   position: absolute;
-  right: 20px;
-  bottom: -10px;
+  right: 70px;
+  bottom: -12px;
   z-index: 1;
+}
+.challenge-modal .castle img {
+  width: 180%;
 }
 .challenge-modal .cloud {
   position: absolute;
-  right: 10px;
+  right: 80px;
   bottom: 20px;
   z-index: 0;
   width: 50px;
 }
 .challenge-modal .hunter {
   position: absolute;
-  width: 32px;
+  right: 133px;
+  bottom: -8px;
+  width: 48px;
+  background-repeat: no-repeat;
   height: 48px;
   overflow: hidden;
   background-image: url(../assets/images/astronaut.png);
   display: block;
-  background: blue;
+  background-position: -280px 0px;
 }
 .challenge-modal .inside {
   position: relative;
