@@ -992,6 +992,11 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     	//this.input.onDown.add(this.unpause, self);
 
       },
+      // restart the game
+      restart: function(){
+        this.state.start('Game');
+      },
+
       unpause: function() {
 
 
@@ -1095,84 +1100,18 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
     		}, 500);
       },
+      // show the challenge window.
       challenge: function() {
-
         var $gi = this;
-        //console.log(  this.challenging );
-
-       // if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
+       if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
     			$scope.answered_correct = false;
           this.challenging = true;
       	  this.frozen();
-
-
           $scope.challengeModal.show();
-
-
-      	  //$('#challenge').removeClass('hide');
-
-          //var get_question = function( data ){
-      	//	var q =  data[Math.floor(Math.random() * data.length)];
-      		 // return q;
-          //};
-
         	$scope.current_question = TS.get_question(  );
-
-/*
-        	var templates = {
-        		"gameover": _.template( $('.templates #gameover').html() ),
-        		"question": _.template( $('.templates #aQuestion').html() ),
-        		"options": _.template( $('.templates #options').html() ),
-        	};
-*/
-
-/*
-        	$('#challenge').append( templates.question({
-        		question: current_question.q,
-        		options: current_question.o,
-        		answer: current_question.a,
-        		n: current_question.n
-        	}) );
-*/
-
-/*
-        	$(document).on('click', 'button[data-value]', function() {
-        		var answer = $(document).find('#the_answer').val();
-
-        		if( $(this).data('value') === answer ) {
-        			$(this).addClass('correct');
-        			$gi.points += 100;
-        			$gi.maxDamage += 1;
-        			$gi.lifeSound.play();
-
-        			$gi.refreshStats();
-        		} else {
-        			$(this).addClass('false');
-        			$gi.hurtSound.play();
-        			$gi.maxDamage += -1;
-        			$gi.refreshStats();
-        		}
-        		$('.note').removeClass('hide');
-
-        		setTimeout(function() {
-        			$('#challenge').addClass('hide');
-              $('.current-question').remove();
-
-              //$gi.castles.destroy();
-
-        			$gi.unfrozen();
-        			setTimeout( function() {
-          			$gi.challenging = false;
-          			this.challenging = false;
-        			}, 1500);
-
-        		}, 500);
-        	});
-*/
-        //}// if challenge
-
-
+        }// if challenge
       }, // challenge
+      // general update function
       update: function() {
 
       	var $gi = this;
@@ -1329,7 +1268,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     			$gi.playerJump();
         }, this);
     		$gi.buttons.up.fixedToCamera = true;
-        $gi.buttons.up.scale.setTo( 1.5, 1.5 );
+        $gi.buttons.up.scale.setTo( 2, 2 );
         $gi.buttons.up.onInputDown.add(function(e ){ }, this);
         $gi.buttons.up.onInputUp.add(function(){ }, this);
 
@@ -1343,7 +1282,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     	    this.firing = false;
         }, this);
     		$gi.buttons.fire.fixedToCamera = true;
-        $gi.buttons.fire.scale.setTo( 1.5, 1.5 );
+        $gi.buttons.fire.scale.setTo( 2, 2 );
         $gi.buttons.fire.onInputDown.add(function(e ){ }, this);
         $gi.buttons.fire.onInputUp.add(function(){ }, this);
 
@@ -1637,6 +1576,12 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     //$scope.game.saveHighScore();
   }// END create_game
 
+
+  $scope.pause_and_show_menu = function(){
+    alert( 'pause the game')
+    $scope.menu_open = $scope.menu_open ? false : true;
+		$scope.game.pause();
+  }
 
 
 
