@@ -2,9 +2,11 @@
  <ion-content >
   <div ng-include src="'templates/nav.html'"></div>
   <div class = 'row'>
-    <div class = 'col'>
-      <h1>Postar Leaders</h1>
-      <h3>{{leaders[0].name}} : {{leaders[0].score }}</h3>
+    <div class = 'col col-center'>
+      <br/>
+      <h1><i class = 'icon-star '></i> Postar Hall Of Fame <i class = 'icon-star'></i></h1>
+
+      <h3 ng-if = "leaders.length > 0">Top Score: {{leaders[0].name}} : {{leaders[0].score }}</h3>
       <br/>
       <ul>
         <li ng-repeat = 'leader in leaders'>

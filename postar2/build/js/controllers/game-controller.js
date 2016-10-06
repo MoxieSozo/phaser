@@ -1,6 +1,6 @@
 angular.module( 'app.controllers' )
-.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService',
-function($scope, $http, AS, GS, TS, WS){
+.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService', "LeaderBoardService",'$ionicPopup', '$state',
+function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
   function create_game(){
     $scope.game = GS.Game = {
     	preload: function() {
@@ -600,6 +600,8 @@ function($scope, $http, AS, GS, TS, WS){
     		    $gi.start_new.scale.setTo( 1.5, 1.5 );
 */
 
+
+           if( LBS.checkHighScore(this.points))  this.saveHighScore();
     				return false;
     			}
 
@@ -623,7 +625,44 @@ function($scope, $http, AS, GS, TS, WS){
 
     	  }
       },
-
+      // let the user save their score
+      saveHighScore : function(){
+         $ionicPopup.show({
+           template: '<input type="text" ng-model="game.initials">',
+           title: 'New High Score!',
+           subTitle: 'Enter Your Initials and Live in Glory ',
+           scope: $scope,
+           buttons: [
+             { text: 'Cancel' },
+             {
+               text: '<b>Save</b>',
+               type: 'button-positive',
+               onTap: function(e) {
+                 LBS.saveScore( $scope.game.initials, $scope.game.points )
+               }
+             },
+           ]
+         }).then(function(){
+            var $p = $ionicPopup.alert({
+               title: 'Way to go ' + $scope.game.initials + '!',
+               //template: '<a class = "button button-block button-positive" ui-sref="leader-board">View Leaderboard</a>',
+               buttons: [
+                {
+                 text: 'Cancel' ,
+                 type : 'button-assertive',
+                },
+                {
+                 text: 'LeaderBoard' ,
+                 type : 'button-positive',
+                 onTap : function( e ){
+                   $p.close();
+                   $state.go('leader-board')
+                 }
+                }
+              ],
+             })
+         })
+      },
       //the player is collecting a toy from a mound
       collectHops: function(player, hop) {
         this.hops.remove( hop );
@@ -751,6 +790,7 @@ function($scope, $http, AS, GS, TS, WS){
         }
 
     }// END GAME
+    $scope.game.saveHighScore();
   }// END create_game
 
   function init(){

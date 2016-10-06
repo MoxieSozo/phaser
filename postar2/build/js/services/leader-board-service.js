@@ -17,25 +17,27 @@ angular.module( 'app.services')
   })
 
   $service.checkHighScore = function( score ){
-    console.log( score )
-    $service.getHighScore();
-    if(score > $service.leaders[0].score){
+    if($service.leaders.length  > 0 ){
+      $service.getHighScore();
+      if(score > $service.leaders[0].score){
+        return true;
+      }
+    } else{
       return true;
     }
   }
 
   $service.getHighScore = function(){
-    $service.leaders.sort( function($a , $b ){
-      return $b.score - $a.score;
-    })
-    console.log( $service.leaders[0].score)
+    if($service.leaders.length  > 0 ){
+      $service.leaders.sort( function($a , $b ){
+        return $b.score - $a.score;
+      })
+    }
   }
 
 
   $service.saveScore = function( name , score){
-    $service.leaders.$add({ name: name , score : score }).then(function(ref) {
-      alert( 'Score Added')
-    });
+    return  $service.leaders.$add({ name: name , score : score });
 
   }
 
