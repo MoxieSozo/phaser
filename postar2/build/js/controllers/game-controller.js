@@ -213,7 +213,7 @@ function($scope, $http, AS, GS, TS, WS){
       challenge: function() {
         console.log(  this.challenging );
 
-        if( this.challenging !== true ){
+        if( this.challenging !== true && this.maxDamage - this.damage >= 1 ){
           this.challenging = true;
       	  this.frozen();
 

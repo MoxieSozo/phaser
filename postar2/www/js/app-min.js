@@ -605,25 +605,38 @@ angular.module('app.services')
     get_weapons  : function(){
      var $si = this;
      this.weapons = [
-		    { "id" : "single",
-			    "fireRate" : 100,
-			    "fireLimit" : 50,
+        { "id" : "grenade",
+			    "fireRate" : 700,
+			    "fireLimit" : 20,
+			    "bulletSpeed": 500,
 			    "bulletAngleVariance" : 0,
-			    'automatic': false
-
+			    "fireAngle": '345',
+			    "automatic" : false,
+			    "bulletGravity": new Phaser.Point(600, 600),
+			    "bulletRotateToVelocity": true
+		    },
+		    { "id" : "single",
+			    "fireRate" : 700,
+			    "fireLimit" : 50,
+			    "fireAngle": '0',
+			    "bulletAngleVariance" : 0,
+			    'automatic': false,
+			    "bulletGravity": new Phaser.Point(0,0),
+			    "bulletSpeed": 1000
 		    },
 		    { "id" : "automatic",
 			    "fireRate" : 100,
 			    "fireLimit" : 100,
 			    "bulletAngleVariance" : 0,
 			    "automatic" : true,
+			    "bulletSpeed": 1000
 		    },
 		    { "id" : "automatic_spread",
 			    "fireRate" : 100,
 			    "fireLimit" : 100,
 			    "bulletAngleVariance" : 10,
 			    "automatic" : true,
-		    },
+		    }
 		  ]
 		  // save the keys for access
 		  this.weaponKeys = [];
@@ -645,7 +658,9 @@ angular.module('app.services')
       $gi.weapon.enableBody = true;
       $gi.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
       $gi.weapon.bulletAngleOffset = 90;
-      $gi.weapon.bulletSpeed = 1000;
+      //$gi.weapon.bulletSpeed = 1000;
+
+
       if(typeof ( key ) === 'string' ){
   			var option =  _.find( weapons, function( o , k ){
     			if(o.id === key ) $gi.currentWeaponIndex = k;
@@ -662,8 +677,10 @@ angular.module('app.services')
   		  $gi.weapon[k] = o;
   	  })
 
+      //$gi.weapon.bulletGravity = -1000;
 
-      $gi.weapon.trackSprite($gi.player, 54, -40, true);
+      $gi.weapon.trackSprite($gi.player, 54, -40, false);
+      //$gi.weapon.fireRate = 1000;
       $gi.fireButton = $gi.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
       $gi.fireButton.onDown.add(function(e ){
   	    console.log( e )
@@ -896,7 +913,7 @@ function($scope, $http, AS, GS, TS, WS){
       challenge: function() {
         console.log(  this.challenging );
 
-        if( this.challenging !== true ){
+        if( this.challenging !== true && this.maxDamage - this.damage >= 1 ){
           this.challenging = true;
       	  this.frozen();
 
