@@ -57,6 +57,9 @@ function($scope, $http, AS, GS, TS){
     		//this.game.world.bringToTop(this.mounds);
     		this.game.world.bringToTop(this.ground);
 
+    		// not sure what this doee, exactly, but it fixes the fall-through-floor issue
+        this.game.physics.arcade.TILE_BIAS = 40;
+
     		//enable physics on the player and ground
     		this.game.physics.arcade.enable(this.player);
     		this.game.physics.arcade.enable(this.ground);
@@ -235,7 +238,7 @@ function($scope, $http, AS, GS, TS){
 
       		setTimeout(function() {
       			$('#challenge').addClass('hide');
-
+            $('.current-question').remove();
       			$gi.unfrozen();
       		}, 3000);
       	});
@@ -257,40 +260,44 @@ function($scope, $http, AS, GS, TS){
         //we also don't want to do anything if the player is stopped for scratching or digging
         if(this.player.alive && !this.stopped) {
 
-          if( this.wraps == 1 && this.challenges_complete !== this.wraps ) {
+          if( this.wraps % 3 !== 0 && this.challenges_complete !== this.wraps ) {
     	      this.challenges_complete = this.wraps;
     	      this.challenge();
 
-          }
+          } else {
+            this.player.body.velocity.x = this.default_velocity.x;
 
-          this.player.body.velocity.x = this.default_velocity.x;
+            //We do a little math to determine whether the game world has wrapped around.
+            //If so, we want to destroy everything and regenerate, so the game will remain random
+            if(!this.wrapping && this.player.x < this.game.width) {
+              //Not used yet, but may be useful to know how many times we've wrapped
+              this.wraps++;
 
-          //We do a little math to determine whether the game world has wrapped around.
-          //If so, we want to destroy everything and regenerate, so the game will remain random
-          if(!this.wrapping && this.player.x < this.game.width) {
-            //Not used yet, but may be useful to know how many times we've wrapped
-            this.wraps++;
+              //We only want to destroy and regenerate once per wrap, so we test with wrapping var
+              this.wrapping = true;
+              this.aliens.destroy();
+              this.generateAliens();
+              this.hops.destroy();
+              this.generateHops();
+              this.weapons.destroy();
+              this.generateNewWeapon();
 
-            //We only want to destroy and regenerate once per wrap, so we test with wrapping var
-            this.wrapping = true;
-            this.aliens.destroy();
-            this.generateAliens();
-            this.hops.destroy();
-            this.generateHops();
-            this.weapons.destroy();
-            this.generateNewWeapon();
+              //put everything back in the proper order
+              //         this.game.world.bringToTop(this.grass);
+              //         this.game.world.bringToTop(this.ground);
+              this.game.world.bringToTop(this.hops);
+              this.game.world.bringToTop(this.buttons);
+              this.game.world.bringToTop(this.weapons);
 
-            //put everything back in the proper order
-    //         this.game.world.bringToTop(this.grass);
-    //         this.game.world.bringToTop(this.ground);
-            this.game.world.bringToTop(this.hops);
-            this.game.world.bringToTop(this.buttons);
-            this.game.world.bringToTop(this.weapons);
-
-          }
-          else if(this.player.x >= this.game.width) {
+            }
+            else if(this.player.x >= this.game.width) {
             this.wrapping = false;
+            }
+
           }
+
+          //this.player.body.velocity.x = this.default_velocity.x;
+
 
           if ( this.cursors.up.isDown) {
 
