@@ -790,7 +790,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
         }
 
     }// END GAME
-    $scope.game.saveHighScore();
+    //$scope.game.saveHighScore();
   }// END create_game
 
   function init(){
