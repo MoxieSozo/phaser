@@ -135,6 +135,9 @@ function($scope, $http, AS, GS, TS, WS){
       	this.pause_menu_quit.inputEnabled = true;
       	this.pause_menu_quit.fixedToCamera = true;
       	this.pause_menu_quit.events.onInputUp.add( function() {
+          //this.create();
+          this.game.sound.mute = true;
+
           window.location.hash = "";
         }, this);
 
