@@ -83,15 +83,25 @@ body {
 }
 #index {
   background: url(/posters/2016-a.jpg);
-  /* background-position: -50%; */
   background-size: 298%;
-  background-position: 50% 11%;
+  background-position: 44% 11%;
   background-repeat: none;
   background-repeat: no-repeat;
 }
 #index a {
-  background-color: rgba(1, 67, 130, 0.9);
-  color: white;
+  background-color: transparent;
+  color: black;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  padding-left: 0px;
+}
+#index .logo {
+  font-size: 32px;
+  color: black;
+}
+#index .col-right {
+  align-self: flex-end;
 }
 #challenge {
   display: block;

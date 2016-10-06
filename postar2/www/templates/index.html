@@ -1,14 +1,17 @@
 <ion-view id = 'index'>
  <ion-content>
-  <div class="row row-center entry-row">
-    <div class="col col-center">
-      <a ui-sref="game" class = 'button' ng-click="menu_open=false">Play Postar</a>
+  <div class="row row-bottom entry-row">
+    <div class="col ">
+      <i class = 'icon-logo logo '></i>
+      <br/>
+      <br/>
+      <ul>
+        <li> <a ui-sref="game" class = 'button ' ng-click="menu_open=false"> Play Postar </a> </li>
+        <li> <a ui-sref="leader-board" class = 'button ' ng-click="menu_open=false"> Postar Leaders </a> </li>
+        <li> <a ui-sref="poster-view" class = 'button ' ng-click="menu_open=false">Badass Posters </a> </li>
+      </ul>
     </div>
-    <div class="col col-center">
-      <a ui-sref="leader-board" class = 'button'  ng-click="menu_open=false">Leader Board</a>
-    </div>
-    <div class="col col-center">
-      <a ui-sref="poster-view" class = 'button'  ng-click="menu_open=false">GABF Posters</a>
+    <div class="col col-center col-right">
     </div>
   </div>
  </ion-content>
