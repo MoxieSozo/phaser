@@ -476,6 +476,9 @@ function($scope, $http, AS, GS, TS, WS){
     		this.refreshStats();
       },
       //the player has just been bitten by a alien
+      died: function() {
+
+      },
       playerDamage: function(player, alien) {
     	  if(player.body.touching.down && alien.body.touching.up ){
     	    //remove the alien that bit our player so it is no longer in the way
