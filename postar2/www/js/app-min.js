@@ -696,7 +696,7 @@ function($scope, $http, AS, GS, TS, WS){
     		this.points = 0;
     		this.wrapping = true;
     		this.stopped = false;
-    		this.maxDamage = 5;
+    		this.maxDamage = 3;
     		this.numAliens = 5;
     		this.w = this.game.width;
     		this.h = this.game.height;
@@ -874,6 +874,11 @@ function($scope, $http, AS, GS, TS, WS){
     	    weapon.body.velocity.x = 0;
         });
 
+        _.forEach(this.castles.children, function(castle) {
+    	    //console.log(alien);
+    	    castle.body.velocity.x = 0;
+        });
+
       },
       // check the wraps / challenges complete then add the castle.
 
@@ -889,10 +894,15 @@ function($scope, $http, AS, GS, TS, WS){
       // activated when the user runs into the castle.
       // present a challenge while pausing the game.
       challenge: function() {
-        if( !this.challenging ){
+        console.log(  this.challenging );
+
+        if( this.challenging !== true ){
           this.challenging = true;
       	  this.frozen();
-      	  console.log( this.challenges );
+
+      	  console.log( 'challenging: ' +  this.challenging );
+
+      	  //console.log( this.challenges );
       	  //alert('you shall not pass!');
       	  $('#challenge').removeClass('hide');
 
@@ -904,7 +914,7 @@ function($scope, $http, AS, GS, TS, WS){
       		  return q;
           };
         	var current_question = get_question( this.challenges );
-        	console.log( current_question );
+        	//console.log( current_question );
 
         	var templates = {
         		"gameover": _.template( $('.templates #gameover').html() ),
@@ -915,14 +925,13 @@ function($scope, $http, AS, GS, TS, WS){
         		question: current_question.q,
         		options: current_question.o,
         		answer: current_question.a,
+        		n: current_question.n
         	}) );
 
         	var $gi = this;
 
         	$(document).on('click', 'button[data-value]', function() {
         		var answer = $(document).find('#the_answer').val();
-
-        		console.log( $(this).data('value'), answer);
 
         		if( $(this).data('value') === answer ) {
         			$(this).addClass('correct');
@@ -934,12 +943,20 @@ function($scope, $http, AS, GS, TS, WS){
         			$gi.maxDamage += -1;
         			$gi.refreshStats();
         		}
+        		$('.note').removeClass('hide');
 
         		setTimeout(function() {
         			$('#challenge').addClass('hide');
               $('.current-question').remove();
+
+              //$gi.castles.destroy();
+
         			$gi.unfrozen();
-        			$gi.challenging = false;
+        			setTimeout( function() {
+          			$gi.challenging = false;
+          			this.challenging = false;
+        			}, 500);
+
         		}, 500);
         	});
         }
@@ -956,8 +973,19 @@ function($scope, $http, AS, GS, TS, WS){
         this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
       	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
-      	if( !this.challenging ){
-        	this.game.physics.arcade.collide(this.player, this.castles, this.challenge, null, this);
+
+      	if( this.challenging !== true ){
+        	this.game.physics.arcade.collide(this.player, this.castles, this.challenge, function() {
+
+          	//console.log( this.challenging );
+          	if( $gi.challenging === true ) {
+            	return false;
+          	} else {
+            	return true;
+          	}
+
+
+          }, this);
         }
 
         //only respond to keys and keep the speed if the player is alive
@@ -1031,10 +1059,11 @@ function($scope, $http, AS, GS, TS, WS){
         this.castles = this.game.add.group();
         this.castles.enableBody = true;
         castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 20, 'castle');
-        castle.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
+        castle.body.velocity.x = this.game.rnd.integerInRange(0, 0);
         castle.scale.setTo(castleScale, castleScale);
         castle.body.immovable = true;
         castle.body.collideWorldBounds = false;
+        //castle.body.stopVelocityOnCollide = false;
 
       }, // add the castle after checking wraps
 
