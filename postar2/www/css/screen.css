@@ -1,5 +1,5 @@
 #home-button {
-  position: absolute;
+  position: fixed;
   font-size: 18px;
   width: 100%;
   top: -20px;
@@ -71,14 +71,14 @@
 }
 */
 .page {
-  background-image: url(/img/bkg-20.jpg);
+  background-image: url(../img/bkg-20.jpg);
   background-size: 298%;
   background-position: 44% 11%;
   background-repeat: none;
   background-repeat: no-repeat;
 }
 .page#index {
-  background-image: url(/img/bkg-100.jpg);
+  background-image: url(../img/bkg-100.jpg);
 }
 .col-center {
   text-align: center;
@@ -160,7 +160,7 @@ body {
 #leader-board #home-button {
   top: 0px;
 }
-.popup {
-  background: rgba(0, 0, 0, 0.5);
+.popup-container.active .popup {
+  background: rgba(0, 0, 0, 0.5) !important;
   color: white;
 }
