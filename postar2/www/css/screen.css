@@ -73,6 +73,9 @@
 .col-center {
   text-align: center;
 }
+.hide {
+  display: none !important;
+}
 /* Empty. Add your own CSS if you like */
 body {
   padding: 0px;
@@ -113,18 +116,15 @@ body {
   right: 10%;
   width: 80%;
   height: 80%;
-  background: #FFF;
+  background: rgba(255, 255, 255, 0.5);
   color: #444;
 }
-.hide {
-  display: none !important;
-}
 .correct {
-  background: green;
+  background: #2ecc71;
   color: white;
 }
 .false {
-  background: red;
+  background: #e74c3c;
   color: white;
 }
 #tmpl-poster-view #home-button {

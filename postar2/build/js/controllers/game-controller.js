@@ -135,6 +135,9 @@ function($scope, $http, AS, GS, TS, WS){
       	this.pause_menu_quit.inputEnabled = true;
       	this.pause_menu_quit.fixedToCamera = true;
       	this.pause_menu_quit.events.onInputUp.add( function() {
+          //this.create();
+          this.game.sound.mute = true;
+
           window.location.hash = "";
         }, this);
 
@@ -249,13 +252,13 @@ function($scope, $http, AS, GS, TS, WS){
       // activated when the user runs into the castle.
       // present a challenge while pausing the game.
       challenge: function() {
-        console.log(  this.challenging );
+        //console.log(  this.challenging );
 
         if( this.challenging !== true && this.maxDamage - this.damage >= 1 ){
           this.challenging = true;
       	  this.frozen();
 
-      	  console.log( 'challenging: ' +  this.challenging );
+      	  //console.log( 'challenging: ' +  this.challenging );
 
       	  //console.log( this.challenges );
       	  //alert('you shall not pass!');
@@ -265,7 +268,7 @@ function($scope, $http, AS, GS, TS, WS){
 
           var get_question = function( data ){
       		var q =  data[Math.floor(Math.random() * data.length)];
-      		  console.log( data, q );
+      		  //console.log( data, q );
       		  return q;
           };
         	var current_question = get_question( this.challenges );
@@ -353,7 +356,6 @@ function($scope, $http, AS, GS, TS, WS){
           if( this.challengeMaybe() ) {
           } else {
             this.player.body.velocity.x = this.default_velocity.x + ( 15 * this.wraps );
-            console.log( this.player.body.velocity.x );
 
             //We do a little math to determine whether the game world has wrapped around.
             //If so, we want to destroy everything and regenerate, so the game will remain random
