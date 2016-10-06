@@ -192,59 +192,74 @@ function($scope, $http, AS, GS, TS, WS){
         });
 
       },
+      // check the wraps / challenges complete then add the castle.
+
+      challengeMaybe : function(){
+        if( this.wraps % 3 !== 0 && this.challenges_complete !== this.wraps ) {
+          //this.challenging = true;
+  	      this.challenges_complete = this.wraps;
+          this.addCastle();
+        }else{
+          return false;
+        }
+      }, // should we present a trivia item
+      // activated when the user runs into the castle.
+      // present a challenge while pausing the game.
       challenge: function() {
+        if( !this.challenging ){
+          this.challenging = true;
+      	  this.frozen();
+      	  console.log( this.challenges );
+      	  //alert('you shall not pass!');
+      	  $('#challenge').removeClass('hide');
 
-    	  this.frozen();
-    	  console.log( this.challenges );
-    	  //alert('you shall not pass!');
-    	  $('#challenge').removeClass('hide');
+      	  // templates
 
-    	  // templates
+          var get_question = function( data ){
+      		var q =  data[Math.floor(Math.random() * data.length)];
+      		  console.log( data, q );
+      		  return q;
+          };
+        	var current_question = get_question( this.challenges );
+        	console.log( current_question );
 
-        var get_question = function( data ){
-    		var q =  data[Math.floor(Math.random() * data.length)];
-    		  console.log( data, q );
-    		  return q;
-        };
-      	var current_question = get_question( this.challenges );
-      	console.log( current_question );
+        	var templates = {
+        		"gameover": _.template( $('.templates #gameover').html() ),
+        		"question": _.template( $('.templates #aQuestion').html() ),
+        		"options": _.template( $('.templates #options').html() ),
+        	};
+        	$('#challenge').append( templates.question({
+        		question: current_question.q,
+        		options: current_question.o,
+        		answer: current_question.a,
+        	}) );
 
-      	var templates = {
-      		"gameover": _.template( $('.templates #gameover').html() ),
-      		"question": _.template( $('.templates #aQuestion').html() ),
-      		"options": _.template( $('.templates #options').html() ),
-      	};
-      	$('#challenge').append( templates.question({
-      		question: current_question.q,
-      		options: current_question.o,
-      		answer: current_question.a,
-      		n: current_question.n
-      	}) );
+        	var $gi = this;
 
-      	var $gi = this;
+        	$(document).on('click', 'button[data-value]', function() {
+        		var answer = $(document).find('#the_answer').val();
 
-      	$(document).on('click', 'button[data-value]', function() {
-      		var answer = $(document).find('#the_answer').val();
+        		console.log( $(this).data('value'), answer);
 
-      		console.log( $(this).data('value'), answer);
+        		if( $(this).data('value') === answer ) {
+        			$(this).addClass('correct');
+        			$gi.points += 100;
+        			$gi.maxDamage += 1;
+        			$gi.refreshStats();
+        		} else {
+        			$(this).addClass('false');
+        			$gi.maxDamage += -1;
+        			$gi.refreshStats();
+        		}
 
-      		if( $(this).data('value') === answer ) {
-      			$(this).addClass('correct');
-      			$gi.points += 100;
-      			$gi.maxDamage += 1;
-      			$gi.refreshStats();
-      		} else {
-      			$(this).addClass('false');
-      			$gi.maxDamage += -1;
-      			$gi.refreshStats();
-      		}
-
-      		setTimeout(function() {
-      			$('#challenge').addClass('hide');
-            $('.current-question').remove();
-      			$gi.unfrozen();
-      		}, 3000);
-      	});
+        		setTimeout(function() {
+        			$('#challenge').addClass('hide');
+              $('.current-question').remove();
+        			$gi.unfrozen();
+        			$gi.challenging = false;
+        		}, 500);
+        	});
+        }
 
 
       }, // challenge
@@ -258,15 +273,15 @@ function($scope, $http, AS, GS, TS, WS){
         this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
       	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
+      	if( !this.challenging ){
+        	this.game.physics.arcade.collide(this.player, this.castles, this.challenge, null, this);
+        }
 
         //only respond to keys and keep the speed if the player is alive
         //we also don't want to do anything if the player is stopped for scratching or digging
         if(this.player.alive && !this.stopped) {
 
-          if( this.wraps % 3 !== 0 && this.challenges_complete !== this.wraps ) {
-    	      this.challenges_complete = this.wraps;
-    	      this.challenge();
-
+          if( this.challengeMaybe() ) {
           } else {
             this.player.body.velocity.x = this.default_velocity.x;
 
@@ -284,6 +299,7 @@ function($scope, $http, AS, GS, TS, WS){
               this.generateHops();
               this.weapons.destroy();
               this.generateNewWeapon();
+              if(typeof( this.castles ) !== 'undefined')  this.castles.destroy();
 
               //put everything back in the proper order
               //         this.game.world.bringToTop(this.grass);
@@ -324,6 +340,20 @@ function($scope, $http, AS, GS, TS, WS){
 
 
       }, // update
+
+      addCastle : function(){
+        var castle,
+          castleHeight = 60
+          castleScale = 1.5;
+        this.castles = this.game.add.group();
+        this.castles.enableBody = true;
+        castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 20, 'castle');
+        castle.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
+        castle.scale.setTo(castleScale, castleScale);
+        castle.body.immovable = true;
+        castle.body.collideWorldBounds = false;
+
+      }, // add the castle after checking wraps
 
     	display_stats : function(){
         var style1 = { font: "20px Arial", fill: "#ff0"};
@@ -482,7 +512,7 @@ function($scope, $http, AS, GS, TS, WS){
       weaponUp: function(player, weapon) {
         this.weapons.remove( weapon );
         weapon.kill();
-        WS.set_weapon( 'automatic' , this );
+        WS.set_weapon( weapon.ref.id , this );
       },
     	// you lost. dang.
       gameOver: function() {
@@ -509,7 +539,7 @@ function($scope, $http, AS, GS, TS, WS){
           //add sprite within an area excluding the beginning and ending
           //  of the game world so items won't suddenly appear or disappear when wrapping
           var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
-          var y = this.game.rnd.integerInRange(this.game.height - 100, ( this.game.world.height - this.game.height) -200 );
+          var y = this.game.rnd.integerInRange(this.game.height - 200, ( this.game.world.height - this.game.height)  );
           hop = this.hops.create(x, y, 'hop');
 
           //physics properties
@@ -545,15 +575,17 @@ function($scope, $http, AS, GS, TS, WS){
           alien.body.collideWorldBounds = false;
         }
       },
+
       // create weapons to collect
       generateNewWeapon: function() {
-
         var weapon;
         this.weapons = this.game.add.group();
         this.weapons.enableBody = true;
         var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
         var y = this.game.rnd.integerInRange(this.game.height - 100, this.game.world.height - this.game.height );
+        var weaponRef = WS.get_random( );
         weapon = this.weapons.create(x, y, 'bullet');
+        weapon.ref = weaponRef;
         weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
         weapon.scale.setTo(.5, .5);
         weapon.body.immovable = true;

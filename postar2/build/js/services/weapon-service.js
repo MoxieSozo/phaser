@@ -5,7 +5,7 @@ angular.module('app.services')
   var weapons = {
     //
     get_weapons  : function(){
-
+     var $si = this;
      this.weapons = [
 		    { "id" : "single",
 			    "fireRate" : 100,
@@ -27,7 +27,16 @@ angular.module('app.services')
 			    "automatic" : true,
 		    },
 		  ]
+		  // save the keys for access
+		  this.weaponKeys = [];
+		  _.each( this.weapons, function(w){
+  		  $si.weaponKeys.push( w.key );
+		  });
 		  return this.weapons;
+    },
+    get_random : function(){
+      var rand = Math.ceil(Math.random(0, this.weaponKeys.length ));
+      return this.weapons[ rand ] ;
     },
     // set a weapon by key or index
     // accepts the key and the context ( this / game )
