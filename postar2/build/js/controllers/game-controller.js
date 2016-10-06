@@ -121,7 +121,9 @@ function($scope, $http, AS, GS, TS, WS){
       	this.pause_menu_quit = this.add.text(this.w/2, 72, 'Quit', { font: '24px Arial', fill: '#fff' })
       	this.pause_menu_quit.inputEnabled = true;
       	this.pause_menu_quit.fixedToCamera = true;
-      	this.pause_menu_quit.events.onInputUp.add( function() { window.location = "http://google.com"; }, this);
+      	this.pause_menu_quit.events.onInputUp.add( function() {
+          window.location.hash = "";
+        }, this);
 
     	// Stop the extras from floating by
         _.forEach(this.aliens.children, function(alien) {
