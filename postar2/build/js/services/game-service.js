@@ -55,6 +55,7 @@ angular.module( 'app.services')
         this.load.audio('lazer', [ 'assets/audio/lazer.wav']);
         this.load.audio('life', [ 'assets/audio/life.wav']);
         this.load.audio('level-up', [ 'assets/audio/level-up.wav']);
+        this.load.audio('shatter', [ 'assets/audio/shatter.wav']);
         this.load.audio('soundtrack', [ 'assets/audio/soundtrack.wav']);
         this.load.audio('toss', [ 'assets/audio/toss.wav']);
 

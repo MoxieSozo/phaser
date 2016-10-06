@@ -125,6 +125,7 @@ angular.module( 'app.services')
         this.load.audio('lazer', [ 'assets/audio/lazer.wav']);
         this.load.audio('life', [ 'assets/audio/life.wav']);
         this.load.audio('level-up', [ 'assets/audio/level-up.wav']);
+        this.load.audio('shatter', [ 'assets/audio/shatter.wav']);
         this.load.audio('soundtrack', [ 'assets/audio/soundtrack.wav']);
         this.load.audio('toss', [ 'assets/audio/toss.wav']);
 
@@ -654,17 +655,27 @@ angular.module('app.services')
     get_weapons  : function(){
      var $si = this;
      this.weapons = [
-/*
         { "id" : "grenade",
 			    "fireRate" : 700,
 			    "fireLimit" : 20,
 			    "bulletSpeed": 500,
-			    "bulletAngleVariance" : 0,
+			    "bulletAngleOffset": 90,
+			    //"bulletAngleVariance" : 0,
 			    "fireAngle": '345',
 			    "automatic" : false,
 			    "bulletGravity": new Phaser.Point(600, 600),
 			    "bulletRotateToVelocity": true
 		    },
+		    { "id" : "grenader",
+			    "fireRate" : 200,
+			    "fireLimit" : 100,
+			    "bulletSpeed": 600,
+			    //"bulletAngleVariance" : 1,
+			    "fireAngle": '345',
+			    "automatic" : false,
+			    "bulletGravity": new Phaser.Point(400, 600),
+			    "bulletRotateToVelocity": true
+		    },/*
 		    { "id" : "auto-grenade",
 			    "fireRate" : 200,
 			    "fireLimit" : 40,
@@ -675,19 +686,18 @@ angular.module('app.services')
 			    "bulletGravity": new Phaser.Point(600, 600),
 			    "bulletRotateToVelocity": true
 		    },
-*/
+
 		    { "id" : "multi-grenade",
 			    "fireRate" : 300,
 			    "fireLimit" : 50,
 			    "bulletSpeed": 950,
+			    "bulletAngleOffset": 90,
 			    //"bulletAngleVariance" : 2,
 			    //"fireAngle": '350',
 			    "automatic" : true,
-			    //"bulletGravity": new Phaser.Point(350, 20),
+			    //"bulletGravity": new Phaser.Point(600, 600),
 			    //"bulletRotateToVelocity": true
 		    },
-
-/*
 		    { "id" : "single",
 			    "fireRate" : 700,
 			    "fireLimit" : 50,
@@ -892,7 +902,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		this.lifeSound = this.game.add.audio('life');
     		this.levelUpSound = this.game.add.audio('level-up');
     		this.music = this.game.add.audio('soundtrack');
-    		this.tosseSound = this.game.add.audio('toss');
+    		this.shatterSound = this.game.add.audio('shatter');
+    		this.tossSound = this.game.add.audio('toss');
 
 
         this.music.loopFull(0.6);
@@ -1120,6 +1131,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         this.game.physics.arcade.collide(this.player, this.ground, this.playerHit, null, this);
         this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, null, this);
         this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
+        this.game.physics.arcade.collide(this.weapon.bullets, this.ground, this.shatter, null, this );
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
       	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
 
@@ -1189,7 +1201,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
           }
 
           if ( this.fireButton.isDown || this.firing ) {
-    		    this.lazerSound.play();
+    		    this.tossSound.play();
     		    this.weapon.fire();
     		    this.refreshStats();
 
@@ -1222,6 +1234,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         castle.body.collideWorldBounds = false;
         this.game.world.bringToTop(this.castles);
         this.game.world.bringToTop(this.buttons);
+        this.game.physics.arcade.overlap(this.weapon.bullets, this.castles, this.shatter, null, this );
+
         //castle.body.stopVelocityOnCollide = false;
 
       }, // add the castle after checking wraps
@@ -1275,7 +1289,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         $gi.buttons.fire = $gi.game.add.button(0, $gi.world.height - 50, 'buttons', (function(){}), $gi, 4,4,5);
         $gi.buttons.fire.onInputDown.add(function(e ){
     	    $gi.firing = true;
-    	    this.lazerSound.play();
+    	    this.tossSound.play();
     			$gi.weapon.fire();
         }, this);
         $gi.buttons.fire.onInputUp.add(function(e ){
@@ -1297,7 +1311,6 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		}
     	}, this);
 
-
       },
 
       //show updated stats values
@@ -1310,6 +1323,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         if(player.body.touching.right) {
           //can add other functionality here for extra obstacles later
         }
+      },
+      shatter: function(obstacle, bullet) {
+        this.shatterSound.play();
+        bullet.destroy();
       },
       alienKilled : function(bullet, alien){
         this.explodeSound.play();
@@ -1562,7 +1579,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         weapon = this.weapons.create(x, y, 'pint');
         weapon.ref = weaponRef;
         weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
-        weapon.scale.setTo(.5, .5);
+        weapon.scale.setTo(1, 1);
         weapon.body.immovable = true;
         weapon.body.collideWorldBounds = false;
       },
