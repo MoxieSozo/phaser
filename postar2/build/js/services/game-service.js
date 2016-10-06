@@ -38,6 +38,22 @@ angular.module( 'app.services')
         this.load.image('grass', 'assets/images/grass.png');
         this.load.image('castle', 'assets/images/castle.png');
         this.load.audio('damage', ['assets/audio/whine.ogg', 'assets/audio/whine.mp3']);
+
+
+        this.load.audio('blip', ['assets/audio/blip.wav']);
+        this.load.audio('explosion', ['assets/audio/explosion.wav']);
+        this.load.audio('fail', [ 'assets/audio/fail.wav']);
+        this.load.audio('game-over', [ 'assets/audio/fail.wav']);
+        this.load.audio('hurt', [ 'assets/audio/hurt.wav']);
+        this.load.audio('jump', [ 'assets/audio/jump.wav']);
+        this.load.audio('lazer', [ 'assets/audio/lazer.wav']);
+        this.load.audio('life', [ 'assets/audio/life.wav']);
+        this.load.audio('level-up', [ 'assets/audio/level-up.wav']);
+        this.load.audio('soundtrack', [ 'assets/audio/soundtrack.wav']);
+        this.load.audio('toss', [ 'assets/audio/toss.wav']);
+
+
+
         //this.load.audio('bark', ['assets/audio/bark.ogg', 'assets/audio/bark.mp3']);
 
         //this.load.image('mound', 'assets/images/rock.png');

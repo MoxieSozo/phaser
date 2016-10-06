@@ -94,8 +94,21 @@ function($scope, $http, AS, GS, TS, WS){
 
 
     		//sounds
-    		this.barkSound = this.game.add.audio('bark');
-    		this.damageSound = this.game.add.audio('damage');
+    		this.collectSound = this.game.add.audio('blip');
+    		this.explodeSound = this.game.add.audio('explosion');
+    		this.gameOverSound = this.game.add.audio('game-over');
+    		this.hurtSound = this.game.add.audio('hurt');
+    		this.jumpSound = this.game.add.audio('jump');
+    		this.lazerSound = this.game.add.audio('lazer');
+    		this.lifeSound = this.game.add.audio('life');
+    		this.levelUpSound = this.game.add.audio('level-up');
+    		this.music = this.game.add.audio('soundtrack');
+    		this.tosseSound = this.game.add.audio('toss');
+
+
+        this.music.loopFull(0.6);
+
+    	//this.damageSound = this.game.add.audio('damage');
     		var RIGHT = 0, LEFT = 1;/* Divide the current tap x coordinate to half the game.width, floor it and there you go */
     		var $gi = this;
 
@@ -125,6 +138,29 @@ function($scope, $http, AS, GS, TS, WS){
           window.location.hash = "";
         }, this);
 
+        this.pause_menu_sound = this.add.text(this.w/2, 112, 'Sound On', { font: '24px Arial', fill: '#fff' });
+      	if( this.game.sound.mute === false ) {
+             this.pause_menu_sound.setText('Sound On');
+          } else {
+            this.pause_menu_sound.setText('Sound Off');
+          }
+
+      	this.pause_menu_sound.inputEnabled = true;
+      	this.pause_menu_sound.fixedToCamera = true;
+      	this.pause_menu_sound.events.onInputUp.add( function() {
+          if( this.game.sound.mute === false ) {
+             this.game.sound.mute = true;
+             this.pause_menu_sound.setText('Sound Off');
+
+          } else {
+            this.game.sound.mute = false;
+            this.pause_menu_sound.setText('Sound On');
+          }
+
+
+        }, this);
+
+
     	// Stop the extras from floating by
         _.forEach(this.aliens.children, function(alien) {
     	    //console.log(alien);
@@ -151,8 +187,10 @@ function($scope, $http, AS, GS, TS, WS){
 
 
       	// Remove the menu and the label
+      	this.pause_label.setText('Pause');
       	this.pause_menu_restart.destroy();
       	this.pause_menu_quit.destroy();
+      	this.pause_menu_sound.destroy();
 
       	// Unpause the game
       	this.paused = false;
@@ -254,9 +292,12 @@ function($scope, $http, AS, GS, TS, WS){
         			$(this).addClass('correct');
         			$gi.points += 100;
         			$gi.maxDamage += 1;
+        			$gi.lifeSound.play();
+
         			$gi.refreshStats();
         		} else {
         			$(this).addClass('false');
+        			$gi.hurtSound.play();
         			$gi.maxDamage += -1;
         			$gi.refreshStats();
         		}
@@ -311,7 +352,8 @@ function($scope, $http, AS, GS, TS, WS){
 
           if( this.challengeMaybe() ) {
           } else {
-            this.player.body.velocity.x = this.default_velocity.x;
+            this.player.body.velocity.x = this.default_velocity.x + ( 15 * this.wraps );
+            console.log( this.player.body.velocity.x );
 
             //We do a little math to determine whether the game world has wrapped around.
             //If so, we want to destroy everything and regenerate, so the game will remain random
@@ -352,6 +394,7 @@ function($scope, $http, AS, GS, TS, WS){
           }
 
           if ( this.fireButton.isDown || this.firing ) {
+    		    this.lazerSound.play();
     		    this.weapon.fire();
     		    this.refreshStats();
 
@@ -386,7 +429,7 @@ function($scope, $http, AS, GS, TS, WS){
 
     	display_stats : function(){
         var style1 = { font: "20px Arial", fill: "#ff0"};
-        var t1 = this.game.add.text(10, 20, "Points:", style1);
+        var t1 = this.game.add.text(10, 20, "Score:", style1);
         t1.fixedToCamera = true;
         var t2 = this.game.add.text(this.game.width-100, 20, "Life:", style1);
         t2.fixedToCamera = true;
@@ -433,6 +476,7 @@ function($scope, $http, AS, GS, TS, WS){
         $gi.buttons.fire = $gi.game.add.button(0, $gi.world.height - 50, 'buttons', (function(){}), $gi, 4,4,5);
         $gi.buttons.fire.onInputDown.add(function(e ){
     	    $gi.firing = true;
+    	    this.lazerSound.play();
     			$gi.weapon.fire();
         }, this);
         $gi.buttons.fire.onInputUp.add(function(e ){
@@ -469,7 +513,7 @@ function($scope, $http, AS, GS, TS, WS){
         }
       },
       alienKilled : function(bullet, alien){
-
+        this.explodeSound.play();
         this.aliens.remove( alien );
         bullet.kill();
     		this.points += 1;
@@ -486,8 +530,11 @@ function($scope, $http, AS, GS, TS, WS){
     	    this.refreshStats();
     	    alien.body.velocity.y = 100;
     	    alien.body.velocity.x = 0;
+
+
     	  }else{
     	    //remove the alien that bit our player so it is no longer in the way
+    	    //this.explodeSound.play();
     	    alien.destroy();
 
     	    //update our stats
@@ -495,12 +542,34 @@ function($scope, $http, AS, GS, TS, WS){
     	    this.refreshStats();
 
     			if(this.damage >= this.maxDamage){
+    				this.music.stop();
+    				this.gameOverSound.play();
     				this.stopped = true;
     				this.player.body.velocity.x = 0;
     				this.player.animations.play('stand', 10, true);
-    		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2, "Game Over", { font: "20px Arial", fill: "#ff0"});
+    		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px Arial", fill: "#ff0"});
     		    gO.fixedToCamera = true;
+/*
+    		    gO.inputEnabled = true;
+            gO.events.onInputUp.add( function() {
+                this.state.start('Game');
+            }, this);
+*/
 
+            var again = this.game.add.text((this.game.width / 4) - 50, this.game.height / 2, "Play Again", { font: "20px Arial", fill: "#ff0"});
+    		    again.fixedToCamera = true;
+    		    again.inputEnabled = true;
+            again.events.onInputUp.add( function() {
+                this.state.start('Game');
+            }, this);
+
+            var score = this.game.add.text((this.game.width / 2) + 50, this.game.height / 2, "Your Score: " + this.points, { font: "20px Arial", fill: "#ff0"});
+    		    score.fixedToCamera = true;
+
+    		    console.log( 'GO: ' + this.points );
+
+
+/*
     			  var $gi = this;
     		    $gi.start_new = $gi.game.add.button($gi.game.width  / 2, $gi.world.height  / 2, 'buttons', (function(){}), $gi, 4,4,5);
     		    $gi.start_new.onInputDown.add(function(e ){
@@ -508,6 +577,7 @@ function($scope, $http, AS, GS, TS, WS){
     		    }, this);
     				$gi.start_new.fixedToCamera = true;
     		    $gi.start_new.scale.setTo( 1.5, 1.5 );
+*/
 
     				return false;
     			}
@@ -517,7 +587,7 @@ function($scope, $http, AS, GS, TS, WS){
     	    this.player.animations.play('stand', 10, true);
 
     	    //play audio
-    	    this.damageSound.play();
+    	    this.hurtSound.play();
 
     	    //wait a couple of seconds for the scratch animation to play before continuing
     	    this.stopped = true;
@@ -536,6 +606,7 @@ function($scope, $http, AS, GS, TS, WS){
       //the player is collecting a toy from a mound
       collectHops: function(player, hop) {
         this.hops.remove( hop );
+        this.collectSound.play();
         hop.kill();
     		this.points += 1;
     		this.refreshStats();
@@ -543,16 +614,20 @@ function($scope, $http, AS, GS, TS, WS){
       //the player is collecting a toy from a mound
       weaponUp: function(player, weapon) {
         this.weapons.remove( weapon );
+        this.levelUpSound.play();
         weapon.kill();
         WS.set_weapon( weapon.ref.id , this );
       },
     	// you lost. dang.
       gameOver: function() {
+        this.music.stop();
+        this.gameOverSound.play();
         this.game.state.start('Game');
       },
       playerJump: function() {
         //when the ground is a sprite, we need to test for "touching" instead of "blocked"
         if(this.player.body.touching.down) {
+          this.jumpSound.play();
           this.player.body.velocity.y -= 700;
         }
       },
