@@ -39,6 +39,7 @@ angular.module( 'app.services')
         this.load.image('cloud3', 'assets/images/cloud-3.png');
         this.load.image('cloud4', 'assets/images/cloud-4.png');
         this.load.image('bullet', 'assets/images/bullet.png');
+        this.load.image('pint', 'assets/images/pint.png');
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');
         this.load.image('castle', 'assets/images/castle.png');

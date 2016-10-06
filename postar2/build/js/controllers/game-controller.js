@@ -846,7 +846,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
         var y = this.game.rnd.integerInRange(this.game.height - 100, this.game.world.height - this.game.height );
         var weaponRef = WS.get_random( );
-        weapon = this.weapons.create(x, y, 'bullet');
+        weapon = this.weapons.create(x, y, 'pint');
         weapon.ref = weaponRef;
         weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
         weapon.scale.setTo(.5, .5);
