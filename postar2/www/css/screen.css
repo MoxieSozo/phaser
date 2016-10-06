@@ -8,7 +8,7 @@
 }
 #home-button i {
   background: white;
-  color: #014382;
+  color: black;
   width: 48px;
   display: inline-block;
   position: relative;
@@ -70,11 +70,25 @@
   }
 }
 */
+.page {
+  background-image: url(/img/bkg-20.jpg);
+  background-size: 298%;
+  background-position: 44% 11%;
+  background-repeat: none;
+  background-repeat: no-repeat;
+}
+.page#index {
+  background-image: url(/img/bkg-100.jpg);
+}
 .col-center {
   text-align: center;
 }
 .hide {
   display: none !important;
+}
+a {
+  color: black;
+  text-decoration: none;
 }
 /* Empty. Add your own CSS if you like */
 body {
@@ -83,13 +97,6 @@ body {
 }
 .entry-row {
   height: 100vh;
-}
-#index {
-  background: url(/posters/2016-a.jpg);
-  background-size: 298%;
-  background-position: 44% 11%;
-  background-repeat: none;
-  background-repeat: no-repeat;
 }
 #index a {
   background-color: transparent;
@@ -149,4 +156,7 @@ body {
       height:70%;
       width:auto;
 */
+}
+#leader-board #home-button {
+  top: 0px;
 }
