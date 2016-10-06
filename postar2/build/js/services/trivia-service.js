@@ -5,18 +5,18 @@ angular.module('app.services')
   var trivia = {
   	questions: [
   		{
-  			q: "6&rsquo; 9&rdquo; Hafth&oacute;r J&uacute;l&iacute;us Bj&ouml;rnsson, also known as &ldquo;The Mountain&rdquo; in HBO&rsquo;s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?",
+  			q: "6’ 9” Hafthór Júlíus Björnsson, also known as “The Mountain” in HBO’s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?",
   			o: {
-          "14-8": '14&rsquo; 8&rdquo;',
-          "20-3": '20&rsquo; 3&rdquo;',
-          "24-6": '24&rsquo; 6&rdquo;',
-          "32-32": '32&rsquo; 8&rdquo;'
+          "14-8": '14’ 8”',
+          "20-3": '20’ 3”',
+          "24-6": '24’ 6”',
+          "32-32": '32’ 8”'
   			},
   			a: "24-6",
   			n: "you're a nut!"
   		},
   		{
-  			q: 'Approximately how many kg of CO2 equivalents did brewers reduce their carbon footprints by through using MicroStar&rsquo;s pool of kegs rather than owning their own?',
+  			q: 'Approximately how many kg of CO2 equivalents did brewers reduce their carbon footprints by through using MicroStar’s pool of kegs rather than owning their own?',
   			o: {
   				"3k": "3,000",
   				"30k": "30,000",
@@ -36,7 +36,7 @@ angular.module('app.services')
   			a: "pw"
   		},
   		{
-  			q: 'The 1980&rsquo;s show Knight Rider was syndicated in Latin Americ. What was it called?',
+  			q: 'The 1980’s show Knight Rider was syndicated in Latin Americ. What was it called?',
   			o: {
   				"a": "El Coche Fantastico",
   				"b": "Knight Rider",
@@ -55,7 +55,7 @@ angular.module('app.services')
   			a: "c"
   		},
   		{
-  			q: 'According to the Brewer&rsquo;s Association&rsquo;s 2015 Brewery Volume Report, who was the 7th largest craft brewer?',
+  			q: 'According to the Brewer’s Association’s 2015 Brewery Volume Report, who was the 7th largest craft brewer?',
   			o: {
   				"a": "Goose Island",
   				"b": "Lagunitas",
@@ -66,7 +66,7 @@ angular.module('app.services')
   			a: "d"
   		},
   		{
-  			q: 'Which is NOT one of the three &ldquo;Can&rsquo;t Fail&rdquo; principles to matching food and beer according the Brewers Association?',
+  			q: 'Which is NOT one of the three “Can’t Fail” principles to matching food and beer according the Brewers Association?',
   			o: {
   				"a": "Match Strength with Strength",
   				"b": "Find Harmonies",
@@ -120,7 +120,7 @@ angular.module('app.services')
   				"a": "Thanksgiving",
   				"b": "Christmas",
   				"c": "May 12",
-  				"d": "February 14 (put your thinking caps on, people&hellip;)",
+  				"d": "February 14 (put your thinking caps on, people...)",
   			},
   			a: "d"
   		},

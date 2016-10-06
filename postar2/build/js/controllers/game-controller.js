@@ -189,6 +189,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     	    cloud.body.velocity.x = 0;
         });
 
+        if( typeof this.castles !== 'undefined' ) {
+          _.forEach(this.castles.children, function(castle) {
+      	    //console.log(alien);
+      	    castle.body.velocity.x = 0;
+          });
+        }
+
 
 
 
@@ -243,10 +250,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     	    weapon.body.velocity.x = 0;
         });
 
-        _.forEach(this.castles.children, function(castle) {
-    	    //console.log(alien);
-    	    castle.body.velocity.x = 0;
-        });
+        if( typeof this.castles !== 'undefined' ) {
+          _.forEach(this.castles.children, function(castle) {
+      	    //console.log(alien);
+      	    castle.body.velocity.x = 0;
+          });
+        }
+
 
         _.forEach(this.clouds.children, function(cloud) {
     	    //console.log(alien);
@@ -261,6 +271,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
           //this.challenging = true;
   	      this.challenges_complete = this.wraps;
           this.addCastle();
+          this.game.world.bringToTop( this.buttons );
+
         }else{
           return false;
         }
@@ -332,7 +344,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
         			setTimeout( function() {
           			$gi.challenging = false;
           			this.challenging = false;
-        			}, 500);
+        			}, 1500);
 
         		}, 500);
         	});
@@ -351,15 +363,17 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
       	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
 
-      	if( this.challenging !== true ){
+
+
+      	if( this.challenging !== true  ){
         	this.game.physics.arcade.collide(this.player, this.castles, this.challenge, function() {
 
-          	//console.log( this.challenging );
           	if( $gi.challenging === true ) {
             	return false;
           	} else {
             	return true;
           	}
+
 
 
           }, this);
@@ -395,9 +409,9 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
               //         this.game.world.bringToTop(this.grass);
               //         this.game.world.bringToTop(this.ground);
               this.game.world.bringToTop(this.hops);
-              this.game.world.bringToTop(this.buttons);
               this.game.world.bringToTop(this.weapons);
               this.game.world.bringToTop(this.clouds);
+              this.game.world.bringToTop(this.buttons);
 
             }
             else if(this.player.x >= this.game.width) {
@@ -421,11 +435,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
 
           }
 
+          this.game.world.bringToTop(this.buttons);
 
           //The game world is infinite in the x-direction, so we wrap around.
           //We subtract padding so the player will remain in the middle of the screen when
             //wrapping, rather than going to the end of the screen first.
           this.game.world.wrap(this.player, -(this.game.width/2), false, true, false);
+          this.game.world.wrap(this.clouds, 0, false, true, false);
         }
 
 
@@ -439,11 +455,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
           castleScale = 2.5;
         this.castles = this.game.add.group();
         this.castles.enableBody = true;
-        castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 20, 'castle');
+        castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 12, 'castle');
         castle.body.velocity.x = this.game.rnd.integerInRange(0, 0);
         castle.scale.setTo(castleScale, castleScale);
-        castle.body.immovable = true;
+        castle.body.immovable = false;
         castle.body.collideWorldBounds = false;
+        this.game.world.bringToTop(this.castles);
+        this.game.world.bringToTop(this.buttons);
         //castle.body.stopVelocityOnCollide = false;
 
       }, // add the castle after checking wraps
@@ -565,8 +583,11 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     			if(this.damage >= this.maxDamage){
     				this.music.stop();
     				this.gameOverSound.play();
-    				this.stopped = true;
-    				this.player.body.velocity.x = 0;
+    				//this.stopped = true;
+    				//this.player.body.velocity.x = 0;
+
+    				this.frozen();
+
     				this.player.animations.play('stand', 10, true);
     		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px Arial", fill: "#ff0"});
     		    gO.fixedToCamera = true;
@@ -613,13 +634,15 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     	    this.hurtSound.play();
 
     	    //wait a couple of seconds for the scratch animation to play before continuing
-    	    this.stopped = true;
-    	    this.player.body.velocity.x = 0;
+    	    //this.stopped = true;
+    	    this.frozen();
+    	    //this.player.body.velocity.x = 0;
     	    var $gi = this;
     	    this.game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-    		    this.stopped = false;
+    		    //this.stopped = false;
     		    $gi.player.animations.play('walk');
-    				$gi.player.body.velocity.x = 300;
+    				//$gi.player.body.velocity.x = 300;
+    				this.unfrozen();
     	    }, this);
 
 
@@ -792,6 +815,16 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     }// END GAME
     //$scope.game.saveHighScore();
   }// END create_game
+
+
+  function checkOverlap(spriteA, spriteB) {
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+
+}
 
   function init(){
     //setting game configuration and loading the assets for the loading screen
