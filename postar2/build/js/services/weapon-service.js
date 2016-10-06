@@ -7,7 +7,6 @@ angular.module('app.services')
     get_weapons  : function(){
      var $si = this;
      this.weapons = [
-/*
         { "id" : "grenade",
 			    "fireRate" : 700,
 			    "fireLimit" : 20,
@@ -18,6 +17,16 @@ angular.module('app.services')
 			    "bulletGravity": new Phaser.Point(600, 600),
 			    "bulletRotateToVelocity": true
 		    },
+		    { "id" : "grenader",
+			    "fireRate" : 100,
+			    "fireLimit" : 900,
+			    "bulletSpeed": 600,
+			    "bulletAngleVariance" : 10,
+			    "fireAngle": '345',
+			    "automatic" : false,
+			    "bulletGravity": new Phaser.Point(600, 600),
+			    "bulletRotateToVelocity": true
+		    },/*
 		    { "id" : "auto-grenade",
 			    "fireRate" : 200,
 			    "fireLimit" : 40,
@@ -28,19 +37,18 @@ angular.module('app.services')
 			    "bulletGravity": new Phaser.Point(600, 600),
 			    "bulletRotateToVelocity": true
 		    },
-*/
+
 		    { "id" : "multi-grenade",
 			    "fireRate" : 300,
 			    "fireLimit" : 50,
 			    "bulletSpeed": 950,
+			    "bulletAngleOffset": 90,
 			    //"bulletAngleVariance" : 2,
 			    //"fireAngle": '350',
 			    "automatic" : true,
-			    //"bulletGravity": new Phaser.Point(350, 20),
+			    //"bulletGravity": new Phaser.Point(600, 600),
 			    //"bulletRotateToVelocity": true
 		    },
-
-/*
 		    { "id" : "single",
 			    "fireRate" : 700,
 			    "fireLimit" : 50,
@@ -84,7 +92,7 @@ angular.module('app.services')
       $gi.weapon = $gi.game.add.weapon(30, 'pint');
       $gi.weapon.enableBody = true;
       $gi.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-      $gi.weapon.bulletAngleOffset = 90;
+      //$gi.weapon.bulletAngleOffset = 90;
       //$gi.weapon.bulletSpeed = 1000;
 
 

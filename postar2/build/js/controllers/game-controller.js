@@ -823,7 +823,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         weapon = this.weapons.create(x, y, 'pint');
         weapon.ref = weaponRef;
         weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
-        weapon.scale.setTo(.5, .5);
+        weapon.scale.setTo(1, 1);
         weapon.body.immovable = true;
         weapon.body.collideWorldBounds = false;
       },
