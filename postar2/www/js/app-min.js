@@ -3,9 +3,17 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('postar', ['ionic', 'app.controllers', 'app.services'])
+angular.module('postar', ['ionic', 'app.controllers', 'app.services', 'firebase'])
 
 .run(function($ionicPlatform) {
+
+  firebase.initializeApp({
+    apiKey: "AIzaSyAWMNtJ6BVc7XR1BRWUMzU4yPVCittoyqE",
+    authDomain: "project-2372542451830160777.firebaseapp.com",
+    databaseURL: "https://project-2372542451830160777.firebaseio.com",
+    storageBucket: "project-2372542451830160777.appspot.com",
+  });
+
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -91,15 +99,15 @@ angular.module( 'app.services')
 
         //load game assets
         this.load.spritesheet('hunter', 'assets/images/astronaut.sprite.png', 50,50);
-        this.load.spritesheet('playerScratch', 'assets/images/dog_scratch.png', 116, 100, 2);
-        this.load.spritesheet('playerDig', 'assets/images/dog_dig.png', 129, 100, 2);
+        //this.load.spritesheet('playerScratch', 'assets/images/dog_scratch.png', 116, 100, 2);
+        //this.load.spritesheet('playerDig', 'assets/images/dog_dig.png', 129, 100, 2);
         this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
         this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');
-        this.load.audio('whine', ['assets/audio/whine.ogg', 'assets/audio/whine.mp3']);
-        this.load.audio('bark', ['assets/audio/bark.ogg', 'assets/audio/bark.mp3']);
+        this.load.audio('damage', ['assets/audio/whine.ogg', 'assets/audio/whine.mp3']);
+        //this.load.audio('bark', ['assets/audio/bark.ogg', 'assets/audio/bark.mp3']);
 
         this.load.image('mound', 'assets/images/rock.png');
 
@@ -113,6 +121,41 @@ angular.module( 'app.services')
     }
   };
   return IS
+}])
+
+angular.module( 'app.services')
+.service( 'LeaderBoardService', ['$firebaseArray', function($firebaseArray){
+
+  var $service =  {
+    get_leaders : function(){
+    	var leadersRef = firebase.database().ref().child('postar_leaders');
+    	var postar_leaders = $firebaseArray(leadersRef);
+    }
+  }
+
+	$service.leadersRef = firebase.database().ref().child('postar_leaders');
+  $service.leaders = $firebaseArray($service.leadersRef);
+
+  return $service
+}])
+
+angular.module( 'app.services')
+.service( 'PosterViewService', [function(){
+
+  var $service = {
+    get_posters  : function(){
+      return [
+        {'year' : '2011', 'name' : 'Blah', 'src' : '2011.png'},
+        {'year' : '2012', 'name' : 'Blah', 'src' : '2012.png'},
+        {'year' : '2013', 'name' : 'Blah', 'src' : '2013.png'}
+      ]
+    }
+  }
+
+  $service.posters = $service.get_posters();
+
+  return $service;
+
 }])
 
 angular.module('app.services')
@@ -144,6 +187,76 @@ angular.module('app.services')
   return trivia
 }]);
 
+angular.module('app.services')
+
+.service( 'WeaponService', [function(){
+
+  var weapons = {
+    //
+    get_weapons  : function(){
+
+     this.weapons = [
+		    { "id" : "single",
+			    "fireRate" : 100,
+			    "fireLimit" : 50,
+			    "bulletAngleVariance" : 0,
+			    'automatic': false
+
+		    },
+		    { "id" : "automatic",
+			    "fireRate" : 100,
+			    "fireLimit" : 100,
+			    "bulletAngleVariance" : 0,
+			    "automatic" : true,
+		    },
+		    { "id" : "automatic_spread",
+			    "fireRate" : 100,
+			    "fireLimit" : 100,
+			    "bulletAngleVariance" : 10,
+			    "automatic" : true,
+		    },
+		  ]
+		  return this.weapons;
+    },
+    // set a weapon by key or index
+    // accepts the key and the context ( this / game )
+    set_weapon : function( key , context  ){
+      var weapons = this.get_weapons();
+      var $gi = context
+      $gi.weapon = $gi.game.add.weapon(30, 'bullet');
+      $gi.weapon.enableBody = true;
+      $gi.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
+      $gi.weapon.bulletAngleOffset = 90;
+      $gi.weapon.bulletSpeed = 1000;
+      if(typeof ( key ) === 'string' ){
+  			var option =  _.find( weapons, function( o , k ){
+    			if(o.id === key ) $gi.currentWeaponIndex = k;
+  			  return o.id === key;
+  		  });
+  		}
+      if(typeof ( key ) === 'number' ) {
+        $gi.currentWeaponIndex = key;
+        option = weapons[key];
+      }
+
+  	  $gi.currentWeapon = option;
+  	  _.each( option, function ( o , k ){
+  		  $gi.weapon[k] = o;
+  	  })
+
+
+      $gi.weapon.trackSprite($gi.player, 54, -40, true);
+      $gi.fireButton = $gi.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+      $gi.fireButton.onDown.add(function(e ){
+  	    console.log( e )
+  			$gi.weapon.fire();
+      }, $gi);
+  	  $gi.weapon.resetShots();
+    }
+  };
+  return weapons
+}]);
+
 angular.module( 'app.controllers' )
 .controller( 'AppController', ['$scope', '$http', 'AppService',
 function($scope, $http, AS){
@@ -151,8 +264,8 @@ function($scope, $http, AS){
 }])
 
 angular.module( 'app.controllers' )
-.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService',
-function($scope, $http, AS, GS, TS){
+.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService',
+function($scope, $http, AS, GS, TS, WS){
   function create_game(){
     $scope.game = GS.Game = {
     	preload: function() {
@@ -224,13 +337,13 @@ function($scope, $http, AS, GS, TS){
     		this.ground.body.allowGravity = false;
 
     		//properties when the player is digging, scratching and standing, so we can use in update()
-    		var playerDigImg = this.game.cache.getImage('playerDig');
-    		this.player.animations.add('dig');
-    		this.player.digDimensions = {width: playerDigImg.width, height: playerDigImg.height};
+    		//var playerDigImg = this.game.cache.getImage('playerDig');
+    		//this.player.animations.add('dig');
+    		//this.player.digDimensions = {width: playerDigImg.width, height: playerDigImg.height};
 
-    		var playerScratchImg = this.game.cache.getImage('playerScratch');
-    		this.player.animations.add('scratch');
-    		this.player.scratchDimensions = {width: playerScratchImg.width, height: playerScratchImg.height};
+    		//var playerScratchImg = this.game.cache.getImage('playerScratch');
+    		//this.player.animations.add('scratch');
+    		//this.player.scratchDimensions = {width: playerScratchImg.width, height: playerScratchImg.height};
 
     		this.player.standDimensions = {width: this.player.width, height: this.player.height};
     		this.player.anchor.setTo(0.5, 1);
@@ -247,7 +360,7 @@ function($scope, $http, AS, GS, TS){
 
     		//sounds
     		this.barkSound = this.game.add.audio('bark');
-    		this.whineSound = this.game.add.audio('whine');
+    		this.damageSound = this.game.add.audio('damage');
     		var RIGHT = 0, LEFT = 1;/* Divide the current tap x coordinate to half the game.width, floor it and there you go */
     		var $gi = this;
 
@@ -496,69 +609,11 @@ function($scope, $http, AS, GS, TS){
     	},
 
       create_weapons : function(){
-
     	  this.firing = false;
-
-    		this.weaponOptions = [
-    		    { "id" : "single",
-    			    "fireRate" : 100,
-    			    "fireLimit" : 100,
-    			    "bulletAngleVariance" : 0,
-    			    'automatic': false
-
-    		    },
-    		    { "id" : "automatic",
-    			    "fireRate" : 100,
-    			    "fireLimit" : 100,
-    			    "bulletAngleVariance" : 10,
-    			    "automatic" : true,
-    		    },
-    		    { "id" : "automatic_spread",
-    			    "fireRate" : 100,
-    			    "fireLimit" : 100,
-    			    "bulletAngleVariance" : 10,
-    			    "automatic" : true,
-    		    },
-    		  ]
-
-        this.set_weapon(0);
-
-
+        WS.set_weapon( 0, this  )
       }, // create_weapons
       set_weapon : function( key ){
-
-    		$gi = this;
-        this.weapon = this.game.add.weapon(30, 'bullet');
-        this.weapon.enableBody = true;
-        this.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-        this.weapon.bulletAngleOffset = 90;
-        this.weapon.bulletSpeed = 1000;
-        if(typeof ( key ) === 'string' ){
-    			var option =  _.find( this.weaponOptions, function( o ){
-    			  return o.id === key;
-    		  });
-    		}
-        if(typeof ( key ) === 'number' ) option = this.weaponOptions[key];
-
-    	  this.currentWeapon = option;
-    	  _.each( option, function ( o , k ){
-    		  $gi.weapon[k] = o;
-    	  })
-    /*
-
-        this.weapon.fireRate = 100;
-        this.weapon.fireLimit = 10;
-        this.weapon.bulletAngleVariance = 10;
-    */
-
-        this.weapon.trackSprite(this.player, 54, -40, true);
-        this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-        this.fireButton.onDown.add(function(e ){
-    	    console.log( e )
-    			this.weapon.fire();
-        }, this);
-    	  this.weapon.resetShots();
-
+    		WS.set_weapon( key , this);
       }, // set_weapon
       build_buttons : function ( ){
     	  var $gi = this;
@@ -662,7 +717,7 @@ function($scope, $http, AS, GS, TS){
     	    this.player.animations.play('stand', 10, true);
 
     	    //play audio
-    	    this.whineSound.play();
+    	    this.damageSound.play();
 
     	    //wait a couple of seconds for the scratch animation to play before continuing
     	    this.stopped = true;
@@ -689,7 +744,7 @@ function($scope, $http, AS, GS, TS){
       weaponUp: function(player, weapon) {
         this.weapons.remove( weapon );
         weapon.kill();
-        this.set_weapon( 'automatic' );
+        WS.set_weapon( 'automatic' , this );
       },
     	// you lost. dang.
       gameOver: function() {
@@ -752,8 +807,9 @@ function($scope, $http, AS, GS, TS){
           alien.body.collideWorldBounds = false;
         }
       },
-
+      // create weapons to collect
       generateNewWeapon: function() {
+
         var weapon;
         this.weapons = this.game.add.group();
         this.weapons.enableBody = true;
@@ -791,15 +847,16 @@ function($scope, $http, AS, GS, TS){
 }])
 
 angular.module( 'app.controllers' )
-.controller( 'LeaderBoardController', ['$scope', '$http', 'AppService',
-function($scope, $http, AS){
+.controller( 'LeaderBoardController', ['$scope', '$http', 'AppService', 'LeaderBoardService',
+function($scope, $http, AS, LBS){
 
+  $scope.leaders = LBS.leaders;
 
 }])
 
 angular.module( 'app.controllers' )
-.controller( 'PosterViewController', ['$scope', '$http', 'AppService',
-function($scope, $http, AS){
+.controller( 'PosterViewController', ['$scope', '$http', 'AppService', 'PosterViewService',
+function($scope, $http, AS, PVS ){
 
-
+  $scope.posters = PVS.posters;
 }])

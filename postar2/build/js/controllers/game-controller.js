@@ -1,6 +1,6 @@
 angular.module( 'app.controllers' )
-.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService',
-function($scope, $http, AS, GS, TS){
+.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService',
+function($scope, $http, AS, GS, TS, WS){
   function create_game(){
     $scope.game = GS.Game = {
     	preload: function() {
@@ -72,13 +72,13 @@ function($scope, $http, AS, GS, TS){
     		this.ground.body.allowGravity = false;
 
     		//properties when the player is digging, scratching and standing, so we can use in update()
-    		var playerDigImg = this.game.cache.getImage('playerDig');
-    		this.player.animations.add('dig');
-    		this.player.digDimensions = {width: playerDigImg.width, height: playerDigImg.height};
+    		//var playerDigImg = this.game.cache.getImage('playerDig');
+    		//this.player.animations.add('dig');
+    		//this.player.digDimensions = {width: playerDigImg.width, height: playerDigImg.height};
 
-    		var playerScratchImg = this.game.cache.getImage('playerScratch');
-    		this.player.animations.add('scratch');
-    		this.player.scratchDimensions = {width: playerScratchImg.width, height: playerScratchImg.height};
+    		//var playerScratchImg = this.game.cache.getImage('playerScratch');
+    		//this.player.animations.add('scratch');
+    		//this.player.scratchDimensions = {width: playerScratchImg.width, height: playerScratchImg.height};
 
     		this.player.standDimensions = {width: this.player.width, height: this.player.height};
     		this.player.anchor.setTo(0.5, 1);
@@ -95,7 +95,7 @@ function($scope, $http, AS, GS, TS){
 
     		//sounds
     		this.barkSound = this.game.add.audio('bark');
-    		this.whineSound = this.game.add.audio('whine');
+    		this.damageSound = this.game.add.audio('damage');
     		var RIGHT = 0, LEFT = 1;/* Divide the current tap x coordinate to half the game.width, floor it and there you go */
     		var $gi = this;
 
@@ -344,69 +344,11 @@ function($scope, $http, AS, GS, TS){
     	},
 
       create_weapons : function(){
-
     	  this.firing = false;
-
-    		this.weaponOptions = [
-    		    { "id" : "single",
-    			    "fireRate" : 100,
-    			    "fireLimit" : 100,
-    			    "bulletAngleVariance" : 0,
-    			    'automatic': false
-
-    		    },
-    		    { "id" : "automatic",
-    			    "fireRate" : 100,
-    			    "fireLimit" : 100,
-    			    "bulletAngleVariance" : 10,
-    			    "automatic" : true,
-    		    },
-    		    { "id" : "automatic_spread",
-    			    "fireRate" : 100,
-    			    "fireLimit" : 100,
-    			    "bulletAngleVariance" : 10,
-    			    "automatic" : true,
-    		    },
-    		  ]
-
-        this.set_weapon(0);
-
-
+        WS.set_weapon( 0, this  )
       }, // create_weapons
       set_weapon : function( key ){
-
-    		$gi = this;
-        this.weapon = this.game.add.weapon(30, 'bullet');
-        this.weapon.enableBody = true;
-        this.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-        this.weapon.bulletAngleOffset = 90;
-        this.weapon.bulletSpeed = 1000;
-        if(typeof ( key ) === 'string' ){
-    			var option =  _.find( this.weaponOptions, function( o ){
-    			  return o.id === key;
-    		  });
-    		}
-        if(typeof ( key ) === 'number' ) option = this.weaponOptions[key];
-
-    	  this.currentWeapon = option;
-    	  _.each( option, function ( o , k ){
-    		  $gi.weapon[k] = o;
-    	  })
-    /*
-
-        this.weapon.fireRate = 100;
-        this.weapon.fireLimit = 10;
-        this.weapon.bulletAngleVariance = 10;
-    */
-
-        this.weapon.trackSprite(this.player, 54, -40, true);
-        this.fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-        this.fireButton.onDown.add(function(e ){
-    	    console.log( e )
-    			this.weapon.fire();
-        }, this);
-    	  this.weapon.resetShots();
-
+    		WS.set_weapon( key , this);
       }, // set_weapon
       build_buttons : function ( ){
     	  var $gi = this;
@@ -510,7 +452,7 @@ function($scope, $http, AS, GS, TS){
     	    this.player.animations.play('stand', 10, true);
 
     	    //play audio
-    	    this.whineSound.play();
+    	    this.damageSound.play();
 
     	    //wait a couple of seconds for the scratch animation to play before continuing
     	    this.stopped = true;
@@ -537,7 +479,7 @@ function($scope, $http, AS, GS, TS){
       weaponUp: function(player, weapon) {
         this.weapons.remove( weapon );
         weapon.kill();
-        this.set_weapon( 'automatic' );
+        WS.set_weapon( 'automatic' , this );
       },
     	// you lost. dang.
       gameOver: function() {
@@ -600,8 +542,9 @@ function($scope, $http, AS, GS, TS){
           alien.body.collideWorldBounds = false;
         }
       },
-
+      // create weapons to collect
       generateNewWeapon: function() {
+
         var weapon;
         this.weapons = this.game.add.group();
         this.weapons.enableBody = true;
