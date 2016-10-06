@@ -420,7 +420,11 @@ angular.module('app.services')
   			},
   			a: "a"
   		}
-  	]
+  	],
+  	get_question : function(){
+		  var q =  this.questions[Math.floor(Math.random() * this.questions.length)];
+		  return q;
+  	}
   };
   return trivia
 }]);

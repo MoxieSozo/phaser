@@ -635,7 +635,11 @@ angular.module('app.services')
   			},
   			a: "a"
   		}
-  	]
+  	],
+  	get_question : function(){
+		  var q =  this.questions[Math.floor(Math.random() * this.questions.length)];
+		  return q;
+  	}
   };
   return trivia
 }]);
@@ -744,8 +748,18 @@ function($scope, $http, AS){
 }])
 
 angular.module( 'app.controllers' )
-.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService', "LeaderBoardService",'$ionicPopup', '$state',
-function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
+.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService', "LeaderBoardService",'$ionicPopup', '$state', '$ionicModal',
+function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
+
+
+  $ionicModal.fromTemplateUrl('templates/challenge-modal.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.challengeModal = modal;
+  });
+
+
+
   function create_game(){
     $scope.game = GS.Game = {
     	preload: function() {
@@ -862,6 +876,9 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     		var $gi = this;
 
     		this.build_buttons( );
+
+        //this.challenge();
+
       },
       pause: function() {
 
@@ -1024,43 +1041,50 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
       }, // should we present a trivia item
       // activated when the user runs into the castle.
       // present a challenge while pausing the game.
+
+      answer_challenge : function($question, $answer , $current){
+        console.log( $question, $answer );
+      },
       challenge: function() {
+
+        var $gi = this;
         //console.log(  this.challenging );
 
-        if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
+       // if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
           this.challenging = true;
       	  this.frozen();
 
-      	  //console.log( 'challenging: ' +  this.challenging );
 
-      	  //console.log( this.challenges );
-      	  //alert('you shall not pass!');
-      	  $('#challenge').removeClass('hide');
+          $scope.challengeModal.show();
 
-      	  // templates
 
-          var get_question = function( data ){
-      		var q =  data[Math.floor(Math.random() * data.length)];
-      		  //console.log( data, q );
-      		  return q;
-          };
-        	var current_question = get_question( this.challenges );
-        	//console.log( current_question );
+      	  //$('#challenge').removeClass('hide');
 
+          //var get_question = function( data ){
+      	//	var q =  data[Math.floor(Math.random() * data.length)];
+      		 // return q;
+          //};
+
+        	$scope.current_question = TS.get_question(  );
+
+/*
         	var templates = {
         		"gameover": _.template( $('.templates #gameover').html() ),
         		"question": _.template( $('.templates #aQuestion').html() ),
         		"options": _.template( $('.templates #options').html() ),
         	};
+*/
+
+/*
         	$('#challenge').append( templates.question({
         		question: current_question.q,
         		options: current_question.o,
         		answer: current_question.a,
         		n: current_question.n
         	}) );
+*/
 
-        	var $gi = this;
-
+/*
         	$(document).on('click', 'button[data-value]', function() {
         		var answer = $(document).find('#the_answer').val();
 
@@ -1093,7 +1117,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
 
         		}, 500);
         	});
-        }
+*/
+        //}// if challenge
 
 
       }, // challenge
@@ -1560,6 +1585,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state ){
     }// END GAME
     //$scope.game.saveHighScore();
   }// END create_game
+
+
 
 
   function checkOverlap(spriteA, spriteB) {

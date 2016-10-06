@@ -1,0 +1,15 @@
+<div class="modal challenge-modal">
+	<ion-content class="account">
+	  <div class = 'padding'>
+			<h4>{{current_question.q}}</h4>
+			<div>
+  			{{game.answer_question}}
+			</div>
+			<ol>
+  			<li ng-repeat='( k, v )  in current_question.o'>
+  			  <button class = 'button button-small' ng-click = 'game.answer_question( k, v, current_question )'>{{v}}</button>
+  			</li>
+			</ol>
+	  </div>
+	</ion-content>
+</div>
