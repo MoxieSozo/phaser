@@ -1,52 +1,75 @@
-#app-nav {
+#home-button {
+  position: absolute;
+  font-size: 18px;
+  width: 100%;
+  top: -20px;
+  z-index: 100;
+  text-align: center;
+}
+#home-button i {
+  background: white;
+  color: #014382;
+  width: 48px;
+  display: inline-block;
+  position: relative;
+  top: -6px;
+  padding-bottom: 6px;
+  padding-top: 5px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+}
+/*
+#app-nav{
   position: fixed;
-  left: calc(50% - 12.5vw);
-  top: -115px;
-  width: 25vw;
+  left:~"calc(50% - 12.5vw)";
+  top:-115px;
+  width:25vw;
   z-index: 1000000;
   text-align: center;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 2px 4px rgba(0,0,0,.4);
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
-  transition: top, 0.2s ease-in-out;
-  background: black;
+  transition: top, .2s ease-in-out;
+  background:black;
+  a{
+    display: block;  text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 5px;
+    color:white;
+  }
+  button{
+    position: relative;
+    bottom:-30px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    outline: none;
+    cursor: pointer;
+    width:30px;
+    background:none;
+    border:none;
+    box-shadow: 0px 2px 4px rgba(0,0,0,.4);
+    transition: all, .2s ease-in-out;
+    background:black;
+    color:white;
+  }
+  &.open{
+    top:0;
+    transition: top, .2s ease-in-out;
+    button{
+      transition: all, .2s ease-in-out;
+      border-radius: 0px;
+      background:none;
+      position: relative;
+      bottom:auto;
+      border:none;
+      box-shadow: none;
+
+    }
+  }
 }
-#app-nav a {
-  display: block;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: bold;
-  padding: 5px;
-  color: white;
-}
-#app-nav button {
-  position: relative;
-  bottom: -30px;
-  border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
-  outline: none;
-  cursor: pointer;
-  width: 30px;
-  background: none;
-  border: none;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
-  transition: all, 0.2s ease-in-out;
-  background: black;
-  color: white;
-}
-#app-nav.open {
-  top: 0;
-  transition: top, 0.2s ease-in-out;
-}
-#app-nav.open button {
-  transition: all, 0.2s ease-in-out;
-  border-radius: 0px;
-  background: none;
-  position: relative;
-  bottom: auto;
-  border: none;
-  box-shadow: none;
-}
+*/
 .col-center {
   text-align: center;
 }
@@ -94,6 +117,9 @@ body {
 */
 }
 #tmpl-poster-view .poster img {
-  height: 70%;
-  width: auto;
+  height: 75vh;
+  /*
+      height:70%;
+      width:auto;
+*/
 }
