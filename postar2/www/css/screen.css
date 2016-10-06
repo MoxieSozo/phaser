@@ -1,3 +1,55 @@
+#app-nav {
+  position: fixed;
+  left: calc(50% - 12.5vw);
+  top: -115px;
+  width: 25vw;
+  z-index: 1000000;
+  text-align: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: top, 0.2s ease-in-out;
+  background: black;
+}
+#app-nav a {
+  display: block;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 5px;
+  color: white;
+}
+#app-nav button {
+  position: relative;
+  bottom: -30px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  width: 30px;
+  background: none;
+  border: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: all, 0.2s ease-in-out;
+  background: black;
+  color: white;
+}
+#app-nav.open {
+  top: 0;
+  transition: top, 0.2s ease-in-out;
+}
+#app-nav.open button {
+  transition: all, 0.2s ease-in-out;
+  border-radius: 0px;
+  background: none;
+  position: relative;
+  bottom: auto;
+  border: none;
+  box-shadow: none;
+}
+.col-center {
+  text-align: center;
+}
 /* Empty. Add your own CSS if you like */
 body {
   padding: 0px;
@@ -5,9 +57,6 @@ body {
 }
 .entry-row {
   height: 100vh;
-}
-.col-center {
-  text-align: center;
 }
 #challenge {
   display: block;
@@ -32,4 +81,19 @@ body {
 .false {
   background: red;
   color: white;
+}
+#tmpl-poster-view .poster {
+  height: 100vh;
+  padding-top: 30px;
+  position: relative;
+  /*
+    h4{
+      position: absolute;
+      left:50%;
+    }
+*/
+}
+#tmpl-poster-view .poster img {
+  height: 70%;
+  width: auto;
 }
