@@ -1,5 +1,8 @@
-<nav id = 'app-nav'>
+<nav id = 'app-nav' ng-class = "menu_open ? 'open' : ''" >
     <a ui-sref="game">Play Postar</a>
     <a ui-sref="poster-view">GABF Posters</a>
     <a ui-sref="leader-board">Leaderboard</a>
+    <button type = 'button' class = 'trigger' ng-click="menu_open = menu_open ? false : true">
+      <i class ='icon ' ng-class="menu_open ? 'ion-android-close' : 'ion-android-open'"></i>
+    </button>
 </nav>
