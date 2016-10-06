@@ -36,10 +36,11 @@ angular.module( 'app.services')
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');
+        this.load.image('castle', 'assets/images/castle.png');
         this.load.audio('damage', ['assets/audio/whine.ogg', 'assets/audio/whine.mp3']);
         //this.load.audio('bark', ['assets/audio/bark.ogg', 'assets/audio/bark.mp3']);
 
-        this.load.image('mound', 'assets/images/rock.png');
+        //this.load.image('mound', 'assets/images/rock.png');
 
         this.load.image('alien', 'assets/images/alien.png');
         this.load.image('bone', 'assets/images/toys/bone.png');
