@@ -166,16 +166,6 @@ angular.module('app.services')
   var trivia = {
   	questions: [
   		{
-  			q: 'How much beer can an astronaut drink in space?',
-  			o: {
-  				"some": "Some",
-  				"lots": "Lots!",
-  				"none": "None :(",
-  			},
-  			a: "lots",
-  			n: "party in outerspace!!!!"
-  		},
-  		{
   			q: "6&rsquo; 9&rdquo; Hafth&oacute;r J&uacute;l&iacute;us Bj&ouml;rnsson, also known as &ldquo;The Mountain&rdquo; in HBO&rsquo;s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?",
   			o: {
           "14-8": '14&rsquo; 8&rdquo;',
@@ -247,7 +237,7 @@ angular.module('app.services')
   			a: "d"
   		},
   		{
-  			q: 'What&rsquo;s your favorite color?',
+  			q: "What's your favorite color?",
   			o: {
   				"a": "Burnt Orange",
   				"b": "Forest Green",
@@ -264,7 +254,7 @@ angular.module('app.services')
   				"c": "Royale with Cheese",
   				"d": "Trimestre du Boeuf",
   			},
-  			a: "xxx"
+  			a: "c"
   		},
   		{
   			q: 'Which beer won gold for Imperial Pale Ale at the 2016 World Beer Cup?',
