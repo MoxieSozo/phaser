@@ -218,6 +218,7 @@ function($scope, $http, AS, GS, TS, WS){
       		question: current_question.q,
       		options: current_question.o,
       		answer: current_question.a,
+      		n: current_question.n
       	}) );
 
       	var $gi = this;

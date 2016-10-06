@@ -11,17 +11,19 @@ angular.module('app.services')
   				"lots": "Lots!",
   				"none": "None :(",
   			},
-  			a: "lots"
+  			a: "lots",
+  			n: "party in outerspace!!!!"
   		},
   		{
-  			q: '6&rsquo; 9&rdquo; Hafth&oacute;r J&uacute;l&iacute;us Bj&ouml;rnsson, also known as &ldquo;The Mountain&rdquo; in HBO&rsquo;s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?',
+  			q: "6&rsquo; 9&rdquo; Hafth&oacute;r J&uacute;l&iacute;us Bj&ouml;rnsson, also known as &ldquo;The Mountain&rdquo; in HBO&rsquo;s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?",
   			o: {
           "14-8": '14&rsquo; 8&rdquo;',
           "20-3": '20&rsquo; 3&rdquo;',
           "24-6": '24&rsquo; 6&rdquo;',
           "32-32": '32&rsquo; 8&rdquo;'
   			},
-  			a: "24-6"
+  			a: "24-6",
+  			n: "you're a nut!"
   		},
   		{
   			q: 'Approximately how many kg of CO2 equivalents did brewers reduce their carbon footprints by through using MicroStar&rsquo;s pool of kegs rather than owning their own?',
@@ -135,170 +137,170 @@ angular.module('app.services')
   		{
   			q: 'Which of these is not the name of a brewery?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Angry Cedar",
+  				"b": "Angry Chair",
+  				"c": "Angry Erik",
+  				"d": "Angry Hanik",
+  				"e": "Angry Minnow",
+  				"f": "Just Plain Angry",
   			},
-  			a: "ccc"
+  			a: "f"
   		},
   		{
-  			q: ' Which singer&rsquo;s real name is Stefani Joanne Angelina Germanotta?',
+  			q: "Which singer's real name is Stefani Joanne Angelina Germanotta?",
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Gwen Stefani",
+  				"b": "Lady Gaga",
+  				"c": "Beyoncé",
+  				"d": "Justin Bieber",
   			},
-  			a: "ccc"
+  			a: "a"
   		},
   		{
   			q: 'Approximately how many liters in a 1/6bbl keg?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "10L",
+  				"b": "20L",
+  				"c": "30L",
+  				"d": "40L",
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'In the Brewer’s Association’s 2015 Brewery Data, which animal is incorporated most frequently into brewery names?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Rabbit",
+  				"b": "Bear",
+  				"c": "Fox",
+  				"d": "Turtle",
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'How many letters are there in the German alphabet (HINT: Includes Umlauts and the ss-Ligature)',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "24",
+  				"b": "26",
+  				"c": "28",
+  				"d": "30",
   			},
-  			a: "ccc"
+  			a: "d"
   		},
   		{
   			q: 'How many kegs does MicroStar and KegCraft have in their combined fleets?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "8",
+  				"b": "~1,000,000",
+  				"c": "~2,000,000",
+  				"d": "~3,000,000",
   			},
-  			a: "ccc"
+  			a: "d"
   		},
   		{
   			q: 'What’s your favorite type of cat?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "British Shorthair",
+  				"b": "Bombay",
+  				"c": "American Bobtail",
+  				"d": "None of the above.  You prefer dogs",
   			},
   			a: "d"
   		},
   		{
   			q: 'What’s your favorite type of dog?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Retriever",
+  				"b": "German Shepherd",
+  				"c": "Bulldog",
+  				"d": "Doesn’t matter as long as it’s not a cat",
   			},
-  			a: "ccc"
+  			a: "d"
   		},
   		{
   			q: 'What keg valve type are used in Guinness kegs?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "A",
+  				"b": "U",
+  				"c": "s",
+  				"d": "D",
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'What does  “R.R.” stand for in George R. R. Martin?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Robert Redford",
+  				"b": "Raymond Richard",
+  				"c": "Red Rum",
+  				"d": "Rolls Royce",
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'Which of the following is not an ingredient approved per the Reinheitsgebot?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Water",
+  				"b": "Corn",
+  				"c": "Barley",
+  				"d": "Hops",
+  				"e": "Yeast"
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'Which of the following is not the name of a brewery?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Hunga Dunga",
+  				"b": "Miss Mcgillicuddy’s Beer Emporium",
+  				"c": "Ass Clown"
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'Sobriety Test: Which is spelled correctly?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "Potato",
+  				"b": "Potatoe"
   			},
-  			a: "ccc"
+  			a: "a"
   		},
   		{
   			q: 'What test did Gambrinus accomplish to earn his crown and admiration of generations of beer drinkers? ',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": 'He brewed the "perfect" beer',
+  				"b": "He discovered how many licks it takes to get to the center of a Tootsie Pop",
+  				"c": "He picked up and carried a full barrel (62 gallons of beer in wood) and carried it",
+  				"d": "He vanquished Voldemort in a duel",
   			},
-  			a: "ccc"
+  			a: "c"
   		},
   		{
   			q: 'How is it said King Gambrinus was able to carry a full barrel (62 gallons of beer in wood)?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"a": "He attached helium balloons",
+  				"b": "He drank half of it first",
+  				"c": "Steroids",
+  				"d": "Seriously?",
   			},
-  			a: "ccc"
+  			a: "b"
   		},
   		{
   			q: 'What was the location of the first United States Marine Recruiting Station?',
   			o: {
-  				"a": "Paprika",
-  				"b": "Marjoram",
-  				"c": "A Bar",
-  				"d": "Cinnamon",
+  				"a": "A prison",
+  				"b": "Wrigley Field",
+  				"c": "A bar",
+  				"d": "Boston Harbor",
   			},
   			a: "c"
   		},
   		{
   			q: 'In what country can beer be sold in vending machines, by street vendors and in train stations?',
   			o: {
-  				"a": "Paprika",
+  				"a": "England",
   				"b": "Japan",
-  				"c": "Coriander",
-  				"d": "Cinnamon",
+  				"c": "India",
+  				"d": "Brazil",
   			},
   			a: "b"
   		},
@@ -415,7 +417,7 @@ angular.module('app.services')
   				"c": "365.25",
   				"d": "12",
   			},
-  			a: "ccc",
+  			a: "c",
   			n: 'Why do you think we have leap years!?'
   		},
   		{

@@ -18,6 +18,10 @@
     					<li><button type="button" class="user-answer" data-value="<%- k %>"> <%- v %> </button></li>
     				<% }); %>
     			</ul>
+    			<% if( typeof n !== 'undefined' ){ %>
+    			<p> <%- n %> </p>
+      			<% } %>
+
     			<input type="text" readonly value="<%- answer %>" id="the_answer" />
 
     		</div>
