@@ -85,7 +85,7 @@ angular.module('app.services')
       //$gi.weapon.fireRate = 1000;
       $gi.fireButton = $gi.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
       $gi.fireButton.onDown.add(function(e ){
-  	    console.log( e )
+  	    //console.log( e )
   			$gi.weapon.fire();
       }, $gi);
   	  $gi.weapon.resetShots();
