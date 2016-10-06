@@ -1,12 +1,17 @@
-<ion-view >
+<ion-view id = 'leader-board' class ='page'>
  <ion-content >
   <div ng-include src="'templates/nav.html'"></div>
-   <h1>Postar Leaders</h1>
-   <h3>{{leaders[0].name}} : {{leaders[0].score }}</h3>
-    <ul>
-      <li ng-repeat = 'leader in leaders'>
-        <b>{{leader.name }}</b> : {{leader.score }}
-      </li>
-    </ul>
+  <div class = 'row'>
+    <div class = 'col'>
+      <h1>Postar Leaders</h1>
+      <h3>{{leaders[0].name}} : {{leaders[0].score }}</h3>
+      <br/>
+      <ul>
+        <li ng-repeat = 'leader in leaders'>
+          <b>{{leader.name }}</b> : {{leader.score }}
+        </li>
+      </ul>
+    </div>
+  </div>
  </ion-content>
 </ion-view>
