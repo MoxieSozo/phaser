@@ -2,10 +2,18 @@
  <ion-content id = 'tmpl-poster-view'>
   <div ng-include src="'templates/nav.html'"></div>
   <ion-slide-box >
-    <ion-slide ng-repeat = 'poster in posters ' >
-      <div class="box poster blue col-center">
-        <img ng-src="posters/{{poster.src}}"/>
-        <h4>{{poster.year}}</h4>
+    <ion-slide  >
+      <div class="box poster">
+        <div class = 'row row-center'>
+          <div class = 'col col-center'>
+            <img ng-src="posters/2016-a.jpg"/>
+            <h4>2016</h4>
+          </div>
+          <div class = 'col col-center'>
+            <img ng-src="posters/2016-b.jpg"/>
+            <h4>2016</h4>
+          </div>
+        </div>
       </div>
     </ion-slide>
   </ion-slide-box>
