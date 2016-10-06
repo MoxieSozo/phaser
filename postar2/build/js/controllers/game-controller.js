@@ -1,9 +1,8 @@
 angular.module( 'app.controllers' )
 .controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService',
 function($scope, $http, AS, GS, TS){
-
   function create_game(){
-    GS.Game = {
+    $scope.game = GS.Game = {
     	preload: function() {
     		this.game.time.advancedTiming = true;
     	},
@@ -467,7 +466,7 @@ function($scope, $http, AS, GS, TS){
       },
       //the player has just been bitten by a alien
       playerDamage: function(player, alien) {
-    	  if(player.body.touching.down){
+    	  if(player.body.touching.down && alien.body.touching.up ){
     	    //remove the alien that bit our player so it is no longer in the way
     	    this.points++;
     	    this.refreshStats();
