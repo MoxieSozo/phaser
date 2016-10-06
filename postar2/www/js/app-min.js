@@ -109,6 +109,7 @@ angular.module( 'app.services')
         this.load.image('cloud3', 'assets/images/cloud-3.png');
         this.load.image('cloud4', 'assets/images/cloud-4.png');
         this.load.image('bullet', 'assets/images/bullet.png');
+        this.load.image('pint', 'assets/images/pint.png');
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');
         this.load.image('castle', 'assets/images/castle.png');
@@ -653,6 +654,7 @@ angular.module('app.services')
     get_weapons  : function(){
      var $si = this;
      this.weapons = [
+/*
         { "id" : "grenade",
 			    "fireRate" : 700,
 			    "fireLimit" : 20,
@@ -663,6 +665,29 @@ angular.module('app.services')
 			    "bulletGravity": new Phaser.Point(600, 600),
 			    "bulletRotateToVelocity": true
 		    },
+		    { "id" : "auto-grenade",
+			    "fireRate" : 200,
+			    "fireLimit" : 40,
+			    "bulletSpeed": 550,
+			    "bulletAngleVariance" : 2,
+			    "fireAngle": '345',
+			    "automatic" : true,
+			    "bulletGravity": new Phaser.Point(600, 600),
+			    "bulletRotateToVelocity": true
+		    },
+*/
+		    { "id" : "multi-grenade",
+			    "fireRate" : 300,
+			    "fireLimit" : 50,
+			    "bulletSpeed": 950,
+			    //"bulletAngleVariance" : 2,
+			    //"fireAngle": '350',
+			    "automatic" : true,
+			    //"bulletGravity": new Phaser.Point(350, 20),
+			    //"bulletRotateToVelocity": true
+		    },
+
+/*
 		    { "id" : "single",
 			    "fireRate" : 700,
 			    "fireLimit" : 50,
@@ -685,6 +710,7 @@ angular.module('app.services')
 			    "bulletAngleVariance" : 10,
 			    "automatic" : true,
 		    }
+*/
 		  ]
 		  // save the keys for access
 		  this.weaponKeys = [];
@@ -702,7 +728,7 @@ angular.module('app.services')
     set_weapon : function( key , context  ){
       var weapons = this.get_weapons();
       var $gi = context
-      $gi.weapon = $gi.game.add.weapon(30, 'bullet');
+      $gi.weapon = $gi.game.add.weapon(30, 'pint');
       $gi.weapon.enableBody = true;
       $gi.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
       $gi.weapon.bulletAngleOffset = 90;
@@ -1569,7 +1595,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
         var y = this.game.rnd.integerInRange(this.game.height - 100, this.game.world.height - this.game.height );
         var weaponRef = WS.get_random( );
-        weapon = this.weapons.create(x, y, 'bullet');
+        weapon = this.weapons.create(x, y, 'pint');
         weapon.ref = weaponRef;
         weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
         weapon.scale.setTo(.5, .5);
