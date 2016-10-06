@@ -187,18 +187,18 @@ angular.module('app.services')
   var trivia = {
   	questions: [
   		{
-  			q: "6&rsquo; 9&rdquo; Hafth&oacute;r J&uacute;l&iacute;us Bj&ouml;rnsson, also known as &ldquo;The Mountain&rdquo; in HBO&rsquo;s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?",
+  			q: "6’ 9” Hafthór Júlíus Björnsson, also known as “The Mountain” in HBO’s Game of Thrones, is a world-record breaking keg tosser. How high did he throw a keg in November 2015?",
   			o: {
-          "14-8": '14&rsquo; 8&rdquo;',
-          "20-3": '20&rsquo; 3&rdquo;',
-          "24-6": '24&rsquo; 6&rdquo;',
-          "32-32": '32&rsquo; 8&rdquo;'
+          "14-8": '14’ 8”',
+          "20-3": '20’ 3”',
+          "24-6": '24’ 6”',
+          "32-32": '32’ 8”'
   			},
   			a: "24-6",
   			n: "you're a nut!"
   		},
   		{
-  			q: 'Approximately how many kg of CO2 equivalents did brewers reduce their carbon footprints by through using MicroStar&rsquo;s pool of kegs rather than owning their own?',
+  			q: 'Approximately how many kg of CO2 equivalents did brewers reduce their carbon footprints by through using MicroStar’s pool of kegs rather than owning their own?',
   			o: {
   				"3k": "3,000",
   				"30k": "30,000",
@@ -218,7 +218,7 @@ angular.module('app.services')
   			a: "pw"
   		},
   		{
-  			q: 'The 1980&rsquo;s show Knight Rider was syndicated in Latin Americ. What was it called?',
+  			q: 'The 1980’s show Knight Rider was syndicated in Latin Americ. What was it called?',
   			o: {
   				"a": "El Coche Fantastico",
   				"b": "Knight Rider",
@@ -237,7 +237,7 @@ angular.module('app.services')
   			a: "c"
   		},
   		{
-  			q: 'According to the Brewer&rsquo;s Association&rsquo;s 2015 Brewery Volume Report, who was the 7th largest craft brewer?',
+  			q: 'According to the Brewer’s Association’s 2015 Brewery Volume Report, who was the 7th largest craft brewer?',
   			o: {
   				"a": "Goose Island",
   				"b": "Lagunitas",
@@ -248,7 +248,7 @@ angular.module('app.services')
   			a: "d"
   		},
   		{
-  			q: 'Which is NOT one of the three &ldquo;Can&rsquo;t Fail&rdquo; principles to matching food and beer according the Brewers Association?',
+  			q: 'Which is NOT one of the three “Can’t Fail” principles to matching food and beer according the Brewers Association?',
   			o: {
   				"a": "Match Strength with Strength",
   				"b": "Find Harmonies",
@@ -302,7 +302,7 @@ angular.module('app.services')
   				"a": "Thanksgiving",
   				"b": "Christmas",
   				"c": "May 12",
-  				"d": "February 14 (put your thinking caps on, people&hellip;)",
+  				"d": "February 14 (put your thinking caps on, people...)",
   			},
   			a: "d"
   		},
@@ -901,6 +901,13 @@ function($scope, $http, AS, GS, TS, WS){
     	    cloud.body.velocity.x = 0;
         });
 
+        if( typeof this.castles !== 'undefined' ) {
+          _.forEach(this.castles.children, function(castle) {
+      	    //console.log(alien);
+      	    castle.body.velocity.x = 0;
+          });
+        }
+
 
 
 
@@ -955,10 +962,13 @@ function($scope, $http, AS, GS, TS, WS){
     	    weapon.body.velocity.x = 0;
         });
 
-        _.forEach(this.castles.children, function(castle) {
-    	    //console.log(alien);
-    	    castle.body.velocity.x = 0;
-        });
+        if( typeof this.castles !== 'undefined' ) {
+          _.forEach(this.castles.children, function(castle) {
+      	    //console.log(alien);
+      	    castle.body.velocity.x = 0;
+          });
+        }
+
 
         _.forEach(this.clouds.children, function(cloud) {
     	    //console.log(alien);
@@ -973,6 +983,8 @@ function($scope, $http, AS, GS, TS, WS){
           //this.challenging = true;
   	      this.challenges_complete = this.wraps;
           this.addCastle();
+          this.game.world.bringToTop( this.buttons );
+
         }else{
           return false;
         }
@@ -1044,7 +1056,7 @@ function($scope, $http, AS, GS, TS, WS){
         			setTimeout( function() {
           			$gi.challenging = false;
           			this.challenging = false;
-        			}, 500);
+        			}, 1500);
 
         		}, 500);
         	});
@@ -1063,15 +1075,17 @@ function($scope, $http, AS, GS, TS, WS){
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
       	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
 
-      	if( this.challenging !== true ){
+
+
+      	if( this.challenging !== true  ){
         	this.game.physics.arcade.collide(this.player, this.castles, this.challenge, function() {
 
-          	//console.log( this.challenging );
           	if( $gi.challenging === true ) {
             	return false;
           	} else {
             	return true;
           	}
+
 
 
           }, this);
@@ -1107,9 +1121,9 @@ function($scope, $http, AS, GS, TS, WS){
               //         this.game.world.bringToTop(this.grass);
               //         this.game.world.bringToTop(this.ground);
               this.game.world.bringToTop(this.hops);
-              this.game.world.bringToTop(this.buttons);
               this.game.world.bringToTop(this.weapons);
               this.game.world.bringToTop(this.clouds);
+              this.game.world.bringToTop(this.buttons);
 
             }
             else if(this.player.x >= this.game.width) {
@@ -1133,11 +1147,13 @@ function($scope, $http, AS, GS, TS, WS){
 
           }
 
+          this.game.world.bringToTop(this.buttons);
 
           //The game world is infinite in the x-direction, so we wrap around.
           //We subtract padding so the player will remain in the middle of the screen when
             //wrapping, rather than going to the end of the screen first.
           this.game.world.wrap(this.player, -(this.game.width/2), false, true, false);
+          this.game.world.wrap(this.clouds, 0, false, true, false);
         }
 
 
@@ -1151,11 +1167,13 @@ function($scope, $http, AS, GS, TS, WS){
           castleScale = 2.5;
         this.castles = this.game.add.group();
         this.castles.enableBody = true;
-        castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 20, 'castle');
+        castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 12, 'castle');
         castle.body.velocity.x = this.game.rnd.integerInRange(0, 0);
         castle.scale.setTo(castleScale, castleScale);
-        castle.body.immovable = true;
+        castle.body.immovable = false;
         castle.body.collideWorldBounds = false;
+        this.game.world.bringToTop(this.castles);
+        this.game.world.bringToTop(this.buttons);
         //castle.body.stopVelocityOnCollide = false;
 
       }, // add the castle after checking wraps
@@ -1277,8 +1295,11 @@ function($scope, $http, AS, GS, TS, WS){
     			if(this.damage >= this.maxDamage){
     				this.music.stop();
     				this.gameOverSound.play();
-    				this.stopped = true;
-    				this.player.body.velocity.x = 0;
+    				//this.stopped = true;
+    				//this.player.body.velocity.x = 0;
+
+    				this.frozen();
+
     				this.player.animations.play('stand', 10, true);
     		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px Arial", fill: "#ff0"});
     		    gO.fixedToCamera = true;
@@ -1323,13 +1344,15 @@ function($scope, $http, AS, GS, TS, WS){
     	    this.hurtSound.play();
 
     	    //wait a couple of seconds for the scratch animation to play before continuing
-    	    this.stopped = true;
-    	    this.player.body.velocity.x = 0;
+    	    //this.stopped = true;
+    	    this.frozen();
+    	    //this.player.body.velocity.x = 0;
     	    var $gi = this;
     	    this.game.time.events.add(Phaser.Timer.SECOND * 1, function(){
-    		    this.stopped = false;
+    		    //this.stopped = false;
     		    $gi.player.animations.play('walk');
-    				$gi.player.body.velocity.x = 300;
+    				//$gi.player.body.velocity.x = 300;
+    				this.unfrozen();
     	    }, this);
 
 
@@ -1464,6 +1487,16 @@ function($scope, $http, AS, GS, TS, WS){
 
     }// END GAME
   }// END create_game
+
+
+  function checkOverlap(spriteA, spriteB) {
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+
+}
 
   function init(){
     //setting game configuration and loading the assets for the loading screen
