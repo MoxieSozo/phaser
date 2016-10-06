@@ -657,7 +657,7 @@ angular.module('app.services')
 			    "fireRate" : 700,
 			    "fireLimit" : 20,
 			    "bulletSpeed": 500,
-			    "bulletAngleVariance" : 0,
+			    "bulletAngleVariance" : 10,
 			    "fireAngle": '345',
 			    "automatic" : false,
 			    "bulletGravity": new Phaser.Point(600, 600),
@@ -1042,8 +1042,33 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       // activated when the user runs into the castle.
       // present a challenge while pausing the game.
 
-      answer_challenge : function($question, $answer , $current){
-        console.log( $question, $answer );
+      answer_challenge : function($answer, $correct_answer ){
+        $scope.my_answer = $answer;
+        var $gi = this;
+        return false;
+        if($answer === $correct_answer){
+    			$gi.points += 100;
+    			$gi.maxDamage += 1;
+    			$gi.lifeSound.play();
+    			$scope.answered_correct = true;
+        }else{
+    			$scope.answered_correct = true;
+    			$gi.hurtSound.play();
+    			$gi.maxDamage += -1;
+    			$gi.refreshStats();
+        }
+    		setTimeout(function() {
+    			$('#challenge').addClass('hide');
+    			$scope.challengeModal.hide();
+          $('.current-question').remove();
+
+    			$gi.unfrozen();
+    			setTimeout( function() {
+      			$gi.challenging = false;
+      			$gi.challenging = false;
+    			}, 1500);
+
+    		}, 500);
       },
       challenge: function() {
 
@@ -1051,6 +1076,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         //console.log(  this.challenging );
 
        // if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
+    			$scope.answered_correct = false;
           this.challenging = true;
       	  this.frozen();
 

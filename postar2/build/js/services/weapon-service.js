@@ -11,7 +11,7 @@ angular.module('app.services')
 			    "fireRate" : 700,
 			    "fireLimit" : 20,
 			    "bulletSpeed": 500,
-			    "bulletAngleVariance" : 0,
+			    "bulletAngleVariance" : 10,
 			    "fireAngle": '345',
 			    "automatic" : false,
 			    "bulletGravity": new Phaser.Point(600, 600),

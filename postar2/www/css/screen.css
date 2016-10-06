@@ -113,6 +113,69 @@ body {
 #index .col-right {
   align-self: flex-end;
 }
+.challenge-modal {
+  background: none;
+  height: 85vh;
+  width: 85vw;
+  left: 7.5vw;
+}
+.challenge-modal .castle {
+  position: absolute;
+  right: 20px;
+  bottom: -10px;
+  z-index: 1;
+}
+.challenge-modal .cloud {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  z-index: 0;
+  width: 50px;
+}
+.challenge-modal .hunter {
+  position: absolute;
+  width: 32px;
+  height: 48px;
+  overflow: hidden;
+  background-image: url(../assets/images/astronaut.png);
+  display: block;
+  background: blue;
+}
+.challenge-modal .inside {
+  position: relative;
+  padding: 10%;
+  background: rgba(255, 255, 255, 0.7);
+  height: 85vh;
+  margin-top: 7.5vh;
+  border: 2px #014382;
+  /*
+    background-size: 200%;
+    background-position: 10% 15%;
+*/
+  background: -moz-radial-gradient(0 100%, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -moz-radial-gradient(100% 100%, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -moz-radial-gradient(100% 0, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -moz-radial-gradient(0 0, circle, rgba(255, 255, 255, 0) 14px, #fff 15px);
+  background: -o-radial-gradient(0 100%, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -o-radial-gradient(100% 100%, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -o-radial-gradient(100% 0, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -o-radial-gradient(0 0, circle, rgba(255, 255, 255, 0) 14px, #fff 15px);
+  background: -webkit-radial-gradient(0 100%, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -webkit-radial-gradient(100% 100%, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -webkit-radial-gradient(100% 0, circle, rgba(255, 255, 255, 0) 14px, #fff 15px), -webkit-radial-gradient(0 0, circle, rgba(255, 255, 255, 0) 14px, #fff 15px);
+  background-position: bottom left, bottom right, top right, top left;
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+}
+.challenge-modal .inside .bar {
+  position: absolute;
+  top: 0;
+  width: 75%;
+  left: 12.5%;
+  text-align: center !important;
+  color: white;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.challenge-modal .inside .bar h4 {
+  width: 100%;
+  text-align: center;
+  color: white;
+  padding: 0px;
+  padding-top: 0px;
+}
 #challenge {
   display: block;
   position: absolute;

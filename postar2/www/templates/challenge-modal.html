@@ -1,15 +1,30 @@
 <div class="modal challenge-modal">
-	<ion-content class="account">
-	  <div class = 'padding'>
-			<h4>{{current_question.q}}</h4>
-			<div>
-  			{{game.answer_question}}
-			</div>
-			<ol>
-  			<li ng-repeat='( k, v )  in current_question.o'>
-  			  <button class = 'button button-small' ng-click = 'game.answer_question( k, v, current_question )'>{{v}}</button>
-  			</li>
-			</ol>
+  <div class = 'padding inside'>
+	  <div class = 'castle'>
+  	  <img src = 'assets/images/castle.png'/>
 	  </div>
-	</ion-content>
+	  <div class = 'cloud'>
+  	  <img src = 'assets/images/cloud-1.png'/>
+	  </div>
+	  <div class = 'hunter'>
+  	  <img src = 'assets/images/astronaut.png'/>
+	  </div>
+    <div class = 'my_answer bar bar-balanced' ng-show = "my_answer && my_answer !== current_question.a">
+      <h4 ng-show="my_answer && my_answer !== current_question.a">Dang! <span>Sorry, You Lose 1 Life</span></h4>
+    </div>
+    <div class = 'my_answer bar bar-assertive' ng-show = "my_answer == current_question.a">
+      <h4 ng-show="my_answer == current_question.a">Great Job! <span>You are awarded 1 life, and 100 points</span></h4>
+    </div>
+		<h4>{{current_question.q}}</h4>
+		<p ng-show = "current_question.n && current_question.n !== ''">{{current_question.n}}</p>
+		<ol>
+			<li ng-repeat='( k, v )  in current_question.o'>
+			  <button class = 'button button-small' ng-click = 'game.answer_challenge( k, current_question.a )'>
+			    {{v}} {{k}}
+			    <i class = 'ion-checkmark ' ng-class="{ 'balanced' : current_question.a == k}" ng-show="my_answer && current_question.a == k"></i>
+			    <i class = 'ion-checkmark assertive' ng-if='my_answer == k && current_question.a !== k' ></i>
+			  </button>
+			</li>
+		</ol>
+  </div>
 </div>
