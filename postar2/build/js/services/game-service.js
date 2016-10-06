@@ -33,6 +33,11 @@ angular.module( 'app.services')
         //this.load.spritesheet('playerDig', 'assets/images/dog_dig.png', 129, 100, 2);
         this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
         this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
+        this.load.image('background', 'assets/images/background.png');
+        this.load.image('cloud1', 'assets/images/cloud-1.png');
+        this.load.image('cloud2', 'assets/images/cloud-2.png');
+        this.load.image('cloud3', 'assets/images/cloud-3.png');
+        this.load.image('cloud4', 'assets/images/cloud-4.png');
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');

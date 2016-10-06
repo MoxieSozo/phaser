@@ -23,12 +23,16 @@ function($scope, $http, AS, GS, TS, WS){
     		}
     		this.challenges = TS.questions;
     		this.challenges_complete = 0;
+    		this.background = this.add.tileSprite(0, 0, 750, 480, "background");
+    		this.background.fixedToCamera = true;
 
 
     		//set up background and ground layer
     		this.game.world.setBounds(0, 0, 3500, this.game.height);
     		this.grass = this.add.tileSprite(0,this.game.height-40,this.game.world.width,20,'grass');
     		this.ground = this.add.tileSprite(0,this.game.height-20,this.game.world.width,70,'ground');
+    		this.clouds = 2;
+    		this.generateClouds();
 
 
 
@@ -180,6 +184,13 @@ function($scope, $http, AS, GS, TS, WS){
     	    weapon.body.velocity.x = 0;
         });
 
+        _.forEach(this.clouds.children, function(cloud) {
+    	    //console.log(alien);
+    	    cloud.body.velocity.x = 0;
+        });
+
+
+
 
 
     	// Add a input listener that can help us return from being paused
@@ -237,6 +248,11 @@ function($scope, $http, AS, GS, TS, WS){
     	    castle.body.velocity.x = 0;
         });
 
+        _.forEach(this.clouds.children, function(cloud) {
+    	    //console.log(alien);
+    	    cloud.body.velocity.x = 0;
+        });
+
       },
       // check the wraps / challenges complete then add the castle.
 
@@ -254,7 +270,7 @@ function($scope, $http, AS, GS, TS, WS){
       challenge: function() {
         //console.log(  this.challenging );
 
-        if( this.challenging !== true && this.maxDamage - this.damage >= 1 ){
+        if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
           this.challenging = true;
       	  this.frozen();
 
@@ -371,6 +387,8 @@ function($scope, $http, AS, GS, TS, WS){
               this.generateHops();
               this.weapons.destroy();
               this.generateNewWeapon();
+              //this.clouds.destroy();
+              //this.generateClouds();
               if(typeof( this.castles ) !== 'undefined')  this.castles.destroy();
 
               //put everything back in the proper order
@@ -379,10 +397,11 @@ function($scope, $http, AS, GS, TS, WS){
               this.game.world.bringToTop(this.hops);
               this.game.world.bringToTop(this.buttons);
               this.game.world.bringToTop(this.weapons);
+              this.game.world.bringToTop(this.clouds);
 
             }
             else if(this.player.x >= this.game.width) {
-            this.wrapping = false;
+              this.wrapping = false;
             }
 
           }
@@ -417,7 +436,7 @@ function($scope, $http, AS, GS, TS, WS){
       addCastle : function(){
         var castle,
           castleHeight = 60
-          castleScale = 1.5;
+          castleScale = 2.5;
         this.castles = this.game.add.group();
         this.castles.enableBody = true;
         castle = this.castles.create(this.game.width, this.game.height - (castleHeight * castleScale) - 20, 'castle');
@@ -660,6 +679,31 @@ function($scope, $http, AS, GS, TS, WS){
     			hop.animations.play( 'play' );
         }
       },
+      generateClouds: function() {
+        var cloud;
+        this.clouds = this.game.add.group();
+
+        this.clouds.enableBody = true;
+        this.numClouds = this.game.rnd.integerInRange(3, 4);
+
+        for (var i = 1; i <= this.numClouds; i++) {
+          //add sprite within an area excluding the beginning and ending
+          //  of the game world so items won't suddenly appear or disappear when wrapping
+          var x = this.game.rnd.integerInRange(300, 1000);
+          var y = this.game.rnd.integerInRange(10, 100 );
+          var scale = this.game.rnd.integerInRange(2, 7 ) * 0.1;
+          cloud = this.clouds.create(x, y, 'cloud'+i);
+
+          //physics properties
+          cloud.body.velocity.x = this.game.rnd.integerInRange(250, 310);
+
+
+          cloud.scale.setTo(scale, scale);
+          cloud.body.immovable = false;
+          cloud.body.collideWorldBounds = false;
+        }
+
+      },
       generateAliens: function() {
         var alien;
         this.aliens = this.game.add.group();
@@ -668,7 +712,7 @@ function($scope, $http, AS, GS, TS, WS){
         this.aliens.enableBody = true;
 
         //phaser's random number generator
-    	  this.numAliens += 2;
+    	  this.numAliens += 1;
 
         for (var i = 0; i < this.numAliens; i++) {
           //add sprite within an area excluding the beginning and ending
@@ -711,7 +755,7 @@ function($scope, $http, AS, GS, TS, WS){
 
   function init(){
     //setting game configuration and loading the assets for the loading screen
-    GS.game = new Phaser.Game(746, 420, Phaser.CANVAS, 'gameDiv');
+    GS.game = new Phaser.Game(745, 420, Phaser.CANVAS, 'gameDiv');
     GS.game.state.add('Boot', GS.Boot);
     GS.game.state.add('Preload', GS.Preload);
     GS.game.state.add('Game', GS.Game);
