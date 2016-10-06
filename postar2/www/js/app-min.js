@@ -103,6 +103,11 @@ angular.module( 'app.services')
         //this.load.spritesheet('playerDig', 'assets/images/dog_dig.png', 129, 100, 2);
         this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
         this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
+        this.load.image('background', 'assets/images/background.png');
+        this.load.image('cloud1', 'assets/images/cloud-1.png');
+        this.load.image('cloud2', 'assets/images/cloud-2.png');
+        this.load.image('cloud3', 'assets/images/cloud-3.png');
+        this.load.image('cloud4', 'assets/images/cloud-4.png');
         this.load.image('bullet', 'assets/images/bullet.png');
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');
@@ -730,12 +735,16 @@ function($scope, $http, AS, GS, TS, WS){
     		}
     		this.challenges = TS.questions;
     		this.challenges_complete = 0;
+    		this.background = this.add.tileSprite(0, 0, 750, 480, "background");
+    		this.background.fixedToCamera = true;
 
 
     		//set up background and ground layer
     		this.game.world.setBounds(0, 0, 3500, this.game.height);
     		this.grass = this.add.tileSprite(0,this.game.height-40,this.game.world.width,20,'grass');
     		this.ground = this.add.tileSprite(0,this.game.height-20,this.game.world.width,70,'ground');
+    		this.clouds = 2;
+    		this.generateClouds();
 
 
 
@@ -1367,6 +1376,31 @@ function($scope, $http, AS, GS, TS, WS){
     			hop.animations.play( 'play' );
         }
       },
+      generateClouds: function() {
+        var cloud;
+        this.clouds = this.game.add.group();
+
+        this.clouds.enableBody = true;
+        this.numClouds = this.game.rnd.integerInRange(3, 4);
+
+        for (var i = 1; i <= this.numClouds; i++) {
+          //add sprite within an area excluding the beginning and ending
+          //  of the game world so items won't suddenly appear or disappear when wrapping
+          var x = this.game.rnd.integerInRange(20, 300);
+          var y = this.game.rnd.integerInRange(20, 200 );
+          var scale = this.game.rnd.integerInRange(1, 10 ) * 0.1;
+          cloud = this.clouds.create(x, y, 'cloud'+i);
+
+          //physics properties
+          cloud.body.velocity.x = this.game.rnd.integerInRange(250, 310);
+
+
+          cloud.scale.setTo(scale, scale);
+          cloud.body.immovable = false;
+          cloud.body.collideWorldBounds = false;
+        }
+
+      },
       generateAliens: function() {
         var alien;
         this.aliens = this.game.add.group();
@@ -1418,7 +1452,7 @@ function($scope, $http, AS, GS, TS, WS){
 
   function init(){
     //setting game configuration and loading the assets for the loading screen
-    GS.game = new Phaser.Game(746, 420, Phaser.CANVAS, 'gameDiv');
+    GS.game = new Phaser.Game(745, 420, Phaser.CANVAS, 'gameDiv');
     GS.game.state.add('Boot', GS.Boot);
     GS.game.state.add('Preload', GS.Preload);
     GS.game.state.add('Game', GS.Game);
