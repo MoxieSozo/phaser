@@ -160,7 +160,7 @@ body {
 #leader-board #home-button {
   top: 0px;
 }
-.popup {
-  background: rgba(0, 0, 0, 0.5);
+.popup-container.active .popup {
+  background: rgba(0, 0, 0, 0.5) !important;
   color: white;
 }
