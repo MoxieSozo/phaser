@@ -928,12 +928,15 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       	this.player.body.velocity.x = 0;
       	this.player.animations.play('stand', 10, true);
 
+/*
       	// Then add the menu
       	this.pause_menu_restart = this.add.text(this.w/2, 48, 'Restart', { font: '24px Arial', fill: '#fff' });
       	this.pause_menu_restart.inputEnabled = true;
       	this.pause_menu_restart.fixedToCamera = true;
       	this.pause_menu_restart.events.onInputUp.add( function() { this.state.start('Game'); }, this);
+*/
 
+/*
       	this.pause_menu_quit = this.add.text(this.w/2, 72, 'Quit', { font: '24px Arial', fill: '#fff' })
       	this.pause_menu_quit.inputEnabled = true;
       	this.pause_menu_quit.fixedToCamera = true;
@@ -943,6 +946,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
           window.location.hash = "";
         }, this);
+*/
 
         this.pause_menu_sound = this.add.text(this.w/2, 112, 'Sound On', { font: '24px Arial', fill: '#fff' });
       	if( this.game.sound.mute === false ) {
@@ -1011,11 +1015,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       unpause: function() {
 
 
+/*
       	// Remove the menu and the label
       	this.pause_label.setText('Pause');
       	this.pause_menu_restart.destroy();
       	this.pause_menu_quit.destroy();
       	this.pause_menu_sound.destroy();
+*/
 
       	// Unpause the game
       	this.paused = false;
@@ -1300,6 +1306,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         $gi.buttons.fire.onInputDown.add(function(e ){ }, this);
         $gi.buttons.fire.onInputUp.add(function(){ }, this);
 
+/*
         $gi.pause_label = $gi.add.text(this.w/2, 20, 'Pause', { font: '24px Arial', fill: '#fff' });
     	$gi.pause_label.inputEnabled = true;
     	$gi.pause_label.fixedToCamera = true;
@@ -1310,6 +1317,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     			this.unpause();
     		}
     	}, this);
+*/
 
       },
 
