@@ -100,7 +100,7 @@ angular.module( 'app.services')
         //load game assets
         this.load.spritesheet('hunter', 'assets/images/astronaut.sprite.png', 50,50);
         this.load.spritesheet('alien', 'assets/images/explode.png', 50,100);
-        this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
+        this.load.spritesheet('buttons', 	'assets/images/buttons.png', 128, 128);
         this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
         this.load.image('background', 'assets/images/background.png');
         this.load.image('cloud1', 'assets/images/cloud-1.png');
@@ -784,6 +784,7 @@ angular.module( 'app.controllers' )
 .controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService', "LeaderBoardService",'$ionicPopup', '$state', '$ionicModal', '$timeout',
 function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, $timeout){
 
+  $scope.menu_open = false;
 
   $ionicModal.fromTemplateUrl('templates/challenge-modal.html', {
     scope: $scope
@@ -824,6 +825,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
     		this.background = this.add.tileSprite(0, 0, 750, 480, "background");
     		this.background.fixedToCamera = true;
     		this.gameOver = false;
+    		this.mute = true;
 
 
     		//set up background and ground layer
@@ -1308,7 +1310,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
     		  up : {},
     		  fire : {}
     	  }
-        $gi.buttons.up = $gi.game.add.button($gi.game.width - 50, $gi.world.height - 50, 'buttons', (function(){}), $gi, 4,4,5);
+
+        $gi.buttons.up = $gi.game.add.button(4, $gi.world.height - 68, 'buttons', (function(){}), $gi, 3,3,2);
         $gi.buttons.up.onInputUp.add(function(e ){
     			$gi.playerJump();
         }, this);
@@ -1316,13 +1319,12 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
     			$gi.playerJump();
         }, this);
     		$gi.buttons.up.fixedToCamera = true;
-        $gi.buttons.up.scale.setTo( 2, 2 );
+        $gi.buttons.up.scale.setTo( .5, .5 );
         $gi.buttons.up.onInputDown.add(function(e ){ }, this);
         $gi.buttons.up.onInputUp.add(function(){ }, this);
 
-        $gi.buttons.fire = $gi.game.add.button(0, $gi.world.height - 50, 'buttons', (function(){}), $gi, 4,4,5);
+        $gi.buttons.fire = $gi.game.add.button($gi.game.width - 68, $gi.world.height - 68 , 'buttons', (function(){}), $gi, 0,0,1);
         $gi.buttons.fire.onInputDown.add(function(e ){
-    	    $gi.firing = true;
     	    this.tossSound.play();
     			$gi.weapon.fire();
         }, this);
@@ -1330,7 +1332,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
     	    this.firing = false;
         }, this);
     		$gi.buttons.fire.fixedToCamera = true;
-        $gi.buttons.fire.scale.setTo( 2, 2 );
+        $gi.buttons.fire.scale.setTo( .5, .5 );
         $gi.buttons.fire.onInputDown.add(function(e ){ }, this);
         $gi.buttons.fire.onInputUp.add(function(){ }, this);
 
@@ -1649,21 +1651,19 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
         weapon.body.collideWorldBounds = false;
       },
 
-      render: function()
-        {
-            //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-        },
-
+      render: function() {
+        //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
+      },
       restart: function(){
         this.state.start('Game');
       },
       pause_and_show_menu: function(){
         $scope.menu_open = $scope.menu_open ? false : true;
-      	if( this.stopped !== true ) {
-      		this.pause();
-      	} else {
-      		this.unpause();
-      	}
+        this.pause();
+      },
+      resume : function(){
+        $scope.menu_open = false;
+        this.unpause();
       },
       quit : function(){
         this.game.sound.mute = true;
