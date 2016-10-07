@@ -820,6 +820,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		this.challenges_complete = 0;
     		this.background = this.add.tileSprite(0, 0, 750, 480, "background");
     		this.background.fixedToCamera = true;
+    		this.gameOver = false;
 
 
     		//set up background and ground layer
@@ -921,7 +922,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
       	// When the paus button is pressed, we pause the game
       	//this.pause_label = this.add.text(this.w/2, 100, 'Resume', { font: '24px Arial', fill: '#fff' });
-      	this.pause_label.setText('Resume');
+      	//this.pause_label.setText('Resume');
 
       	this.paused = true;
       	this.stopped = true;
@@ -948,15 +949,20 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         }, this);
 */
 
-        this.pause_menu_sound = this.add.text(this.w/2, 112, 'Sound On', { font: '24px Arial', fill: '#fff' });
+//         this.pause_menu_sound = this.add.text(this.w/2, 112, 'Sound On', { font: '24px Arial', fill: '#fff' });
+/*
       	if( this.game.sound.mute === false ) {
              this.pause_menu_sound.setText('Sound On');
           } else {
             this.pause_menu_sound.setText('Sound Off');
           }
+*/
 
+/*
       	this.pause_menu_sound.inputEnabled = true;
       	this.pause_menu_sound.fixedToCamera = true;
+*/
+/*
       	this.pause_menu_sound.events.onInputUp.add( function() {
           if( this.game.sound.mute === false ) {
              this.game.sound.mute = true;
@@ -969,6 +975,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
 
         }, this);
+*/
 
 
     	// Stop the extras from floating by
@@ -1006,6 +1013,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     	// Add a input listener that can help us return from being paused
     	//this.input.onDown.add(this.unpause, self);
 
+      },
+      toggle_sound : function(){
+        if( this.game.sound.mute === false ) {
+           this.game.sound.mute = true;
+        } else {
+          this.game.sound.mute = false;
+        }
       },
       // restart the game
       restart: function(){
@@ -1112,7 +1126,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     			$gi.unfrozen();
     			setTimeout( function() {
       			$gi.challenging = false;
-      			$gi.challenging = false;
+      			$scope.my_answer = false;
+      			$scope.current_question = false;
     			}, 1500);
 
     		}, 500);
@@ -1247,6 +1262,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       }, // add the castle after checking wraps
 
     	display_stats : function(){
+/*
         var style1 = { font: "20px Arial", fill: "#ff0"};
         var t1 = this.game.add.text(10, 20, "Score:", style1);
         t1.fixedToCamera = true;
@@ -1258,13 +1274,18 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
 
         var style2 = { font: "26px Arial", fill: "#00ff00"};
+*/
+/*
         this.pointsText = this.game.add.text(80, 18, "", style2);
         this.aliensText = this.game.add.text(this.game.width-50, 18, "", style2);
         this.shotsText = this.game.add.text(this.game.width-150, 18, "1", style2);
+*/
         this.refreshStats();
+/*
         this.pointsText.fixedToCamera = true;
         this.aliensText.fixedToCamera = true;
         this.shotsText.fixedToCamera = true;
+*/
     	},
 
       create_weapons : function(){
@@ -1323,9 +1344,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
       //show updated stats values
       refreshStats: function() {
-        this.pointsText.text = this.points;
-        this.aliensText.text = this.maxDamage - this.damage;
-        this.shotsText.text = this.weapon.fireLimit -  this.weapon.shots;
+        this.pointsText = this.points;
+        this.damageText = this.maxDamage - this.damage;
+        this.shotsText = this.weapon.fireLimit -  this.weapon.shots;
+        if(!$scope.$$phase) $scope.$apply();
       },
       playerHit: function(player, blockedLayer) {
         if(player.body.touching.right) {
@@ -1344,9 +1366,11 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		this.refreshStats();
       },
       //the player has just been bitten by a alien
+/*
       died: function() {
 
       },
+*/
       playerDamage: function(player, alien) {
     	  if(player.body.touching.down && alien.body.touching.up ){
     	    //remove the alien that bit our player so it is no longer in the way
@@ -1374,8 +1398,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     				this.frozen();
 
     				this.player.animations.play('stand', 10, true);
-    		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px Arial", fill: "#ff0"});
+/*
+    		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px arcadeclassicregular", fill: "#ff0"});
     		    gO.fixedToCamera = true;
+*/
 /*
     		    gO.inputEnabled = true;
             gO.events.onInputUp.add( function() {
@@ -1383,17 +1409,21 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
             }, this);
 */
 
+/*
             var again = this.game.add.text((this.game.width / 4) - 50, this.game.height / 2, "Play Again", { font: "20px Arial", fill: "#ff0"});
     		    again.fixedToCamera = true;
     		    again.inputEnabled = true;
             again.events.onInputUp.add( function() {
                 this.state.start('Game');
             }, this);
+*/
 
+/*
             var score = this.game.add.text((this.game.width / 2) + 50, this.game.height / 2, "Your Score: " + this.points, { font: "20px Arial", fill: "#ff0"});
     		    score.fixedToCamera = true;
 
     		    console.log( 'GO: ' + this.points );
+*/
 
 
 /*
@@ -1405,9 +1435,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     				$gi.start_new.fixedToCamera = true;
     		    $gi.start_new.scale.setTo( 1.5, 1.5 );
 */
+            this.gameOver = true;
+            if(!$scope.$$phase) $scope.$apply();
 
-
-           if( LBS.checkHighScore(this.points))  this.saveHighScore();
+            if( LBS.checkHighScore(this.points))  this.saveHighScore();
     				return false;
     			}
 
@@ -1487,11 +1518,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         WS.set_weapon( weapon.ref.id , this );
       },
     	// you lost. dang.
+/*
       gameOver: function() {
         this.music.stop();
         this.gameOverSound.play();
         this.game.state.start('Game');
       },
+*/
       playerJump: function() {
         //when the ground is a sprite, we need to test for "touching" instead of "blocked"
         if(this.player.body.touching.down) {
@@ -1612,12 +1645,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         this.game.sound.mute = true;
         $state.go('app')
       }
-
-
-
-
     }// END GAME
-    //$scope.game.saveHighScore();
   }// END create_game
 
 
