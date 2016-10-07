@@ -1,5 +1,30 @@
 <ion-view >
  <ion-content >
+
+<nav id = 'app-nav' ng-class = "menu_open ? 'open' : ''" >
+    <a ng-click="game.restart();">Restart</a>
+    <a ng-click="game.quit()">Quit</a>
+    <a ng-click="game.toggle_sound()">Sound {{game.sound.mute ? 'On' : 'Off'}}</a>
+    <button type = 'button' class = 'trigger' ng-click="game.pause_and_show_menu()">
+      <i class ='icon ' ng-class="menu_open ? 'ion-play' : 'ion-pause'"></i>
+    </button>
+</nav>
+
+<div class = 'heads-up'>
+  <div class = 'score'> <b>Score:</b> {{game.pointsText}} </div>
+  <div class = 'life'> <b>Life:</b> {{game.damageText}} </div>
+  <div class = 'shots'> <b>Shots:</b> {{game.shotsText}} </div>
+</div>
+
+<div class = 'game-over-container' ng-show="game.gameOver">
+  <div class = 'game-over'> Game Over </div>
+  <div class = 'play-agin' ng-click="game.restart();"> Play Again </div>
+  <div class = 'your-score'> <b>Your Score:</b> {{game.pointsText}} </div>
+</div>
+
+
+
+
     <div id = 'gameDiv'></div>
 
     <div id="challenge" class="hide">

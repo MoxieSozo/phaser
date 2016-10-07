@@ -19,57 +19,55 @@
   border-bottom-right-radius: 4px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
 }
-/*
-#app-nav{
+#app-nav {
   position: fixed;
-  left:~"calc(50% - 12.5vw)";
-  top:-115px;
-  width:25vw;
+  left: calc(50% - 12.5vw);
+  top: -120px;
+  width: 25vw;
   z-index: 1000000;
   text-align: center;
-  box-shadow: 0px 2px 4px rgba(0,0,0,.4);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
-  transition: top, .2s ease-in-out;
-  background:black;
-  a{
-    display: block;  text-decoration: none;
-    text-transform: uppercase;
-    font-weight: bold;
-    padding: 5px;
-    color:white;
-  }
-  button{
-    position: relative;
-    bottom:-30px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    outline: none;
-    cursor: pointer;
-    width:30px;
-    background:none;
-    border:none;
-    box-shadow: 0px 2px 4px rgba(0,0,0,.4);
-    transition: all, .2s ease-in-out;
-    background:black;
-    color:white;
-  }
-  &.open{
-    top:0;
-    transition: top, .2s ease-in-out;
-    button{
-      transition: all, .2s ease-in-out;
-      border-radius: 0px;
-      background:none;
-      position: relative;
-      bottom:auto;
-      border:none;
-      box-shadow: none;
-
-    }
-  }
+  transition: top, 0.2s ease-in-out;
+  background: black;
 }
-*/
+#app-nav a {
+  display: block;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  padding: 5px;
+  color: white;
+}
+#app-nav button {
+  position: relative;
+  bottom: -30px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  width: 30px;
+  background: none;
+  border: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+  transition: all, 0.2s ease-in-out;
+  background: black;
+  color: white;
+}
+#app-nav.open {
+  top: 0;
+  transition: top, 0.2s ease-in-out;
+}
+#app-nav.open button {
+  transition: all, 0.2s ease-in-out;
+  border-radius: 0px;
+  background: none;
+  position: relative;
+  bottom: auto;
+  border: none;
+  box-shadow: none;
+}
 .page {
   background-image: url(../img/bkg-20.jpg);
   background-size: 298%;
@@ -89,6 +87,9 @@
 a {
   color: black;
   text-decoration: none;
+}
+* {
+  font-family: "arcadeclassicregular" !important;
 }
 /* Empty. Add your own CSS if you like */
 body {
@@ -168,12 +169,13 @@ body {
 .challenge-modal .inside .bar {
   position: absolute;
   top: 0;
-  width: 75%;
-  left: 12.5%;
+  width: 85%;
+  left: 7.5%;
   text-align: center !important;
   color: white;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
+  background: #014382;
 }
 .challenge-modal .inside .bar h4 {
   width: 100%;
@@ -181,6 +183,34 @@ body {
   color: white;
   padding: 0px;
   padding-top: 0px;
+}
+.heads-up {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  font-size: 17px;
+  color: white;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+.heads-up .score {
+  float: left;
+}
+.heads-up .shots {
+  float: right;
+}
+.heads-up .life {
+  margin-left: 20px;
+  float: right;
+}
+.game-over-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  padding-top: 40vh;
+  color: white;
 }
 #challenge {
   display: block;

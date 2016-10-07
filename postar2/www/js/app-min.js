@@ -820,6 +820,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		this.challenges_complete = 0;
     		this.background = this.add.tileSprite(0, 0, 750, 480, "background");
     		this.background.fixedToCamera = true;
+    		this.gameOver = false;
 
 
     		//set up background and ground layer
@@ -921,19 +922,22 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
       	// When the paus button is pressed, we pause the game
       	//this.pause_label = this.add.text(this.w/2, 100, 'Resume', { font: '24px Arial', fill: '#fff' });
-      	this.pause_label.setText('Resume');
+      	//this.pause_label.setText('Resume');
 
       	this.paused = true;
       	this.stopped = true;
       	this.player.body.velocity.x = 0;
       	this.player.animations.play('stand', 10, true);
 
+/*
       	// Then add the menu
       	this.pause_menu_restart = this.add.text(this.w/2, 48, 'Restart', { font: '24px Arial', fill: '#fff' });
       	this.pause_menu_restart.inputEnabled = true;
       	this.pause_menu_restart.fixedToCamera = true;
       	this.pause_menu_restart.events.onInputUp.add( function() { this.state.start('Game'); }, this);
+*/
 
+/*
       	this.pause_menu_quit = this.add.text(this.w/2, 72, 'Quit', { font: '24px Arial', fill: '#fff' })
       	this.pause_menu_quit.inputEnabled = true;
       	this.pause_menu_quit.fixedToCamera = true;
@@ -943,16 +947,22 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
           window.location.hash = "";
         }, this);
+*/
 
-        this.pause_menu_sound = this.add.text(this.w/2, 112, 'Sound On', { font: '24px Arial', fill: '#fff' });
+//         this.pause_menu_sound = this.add.text(this.w/2, 112, 'Sound On', { font: '24px Arial', fill: '#fff' });
+/*
       	if( this.game.sound.mute === false ) {
              this.pause_menu_sound.setText('Sound On');
           } else {
             this.pause_menu_sound.setText('Sound Off');
           }
+*/
 
+/*
       	this.pause_menu_sound.inputEnabled = true;
       	this.pause_menu_sound.fixedToCamera = true;
+*/
+/*
       	this.pause_menu_sound.events.onInputUp.add( function() {
           if( this.game.sound.mute === false ) {
              this.game.sound.mute = true;
@@ -965,6 +975,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
 
         }, this);
+*/
 
 
     	// Stop the extras from floating by
@@ -1003,14 +1014,28 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     	//this.input.onDown.add(this.unpause, self);
 
       },
+      toggle_sound : function(){
+        if( this.game.sound.mute === false ) {
+           this.game.sound.mute = true;
+        } else {
+          this.game.sound.mute = false;
+        }
+      },
+      // restart the game
+      restart: function(){
+        this.state.start('Game');
+      },
+
       unpause: function() {
 
 
+/*
       	// Remove the menu and the label
       	this.pause_label.setText('Pause');
       	this.pause_menu_restart.destroy();
       	this.pause_menu_quit.destroy();
       	this.pause_menu_sound.destroy();
+*/
 
       	// Unpause the game
       	this.paused = false;
@@ -1101,89 +1126,24 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     			$gi.unfrozen();
     			setTimeout( function() {
       			$gi.challenging = false;
-      			$gi.challenging = false;
+      			$scope.my_answer = false;
+      			$scope.current_question = false;
     			}, 1500);
 
     		}, 500);
       },
+      // show the challenge window.
       challenge: function() {
-
         var $gi = this;
-        //console.log(  this.challenging );
-
-       // if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
+       if( ( this.player.body.touching.right ) && this.challenging !== true && this.maxDamage - this.damage >= 1 ){
     			$scope.answered_correct = false;
           this.challenging = true;
       	  this.frozen();
-
-
           $scope.challengeModal.show();
-
-
-      	  //$('#challenge').removeClass('hide');
-
-          //var get_question = function( data ){
-      	//	var q =  data[Math.floor(Math.random() * data.length)];
-      		 // return q;
-          //};
-
         	$scope.current_question = TS.get_question(  );
-
-/*
-        	var templates = {
-        		"gameover": _.template( $('.templates #gameover').html() ),
-        		"question": _.template( $('.templates #aQuestion').html() ),
-        		"options": _.template( $('.templates #options').html() ),
-        	};
-*/
-
-/*
-        	$('#challenge').append( templates.question({
-        		question: current_question.q,
-        		options: current_question.o,
-        		answer: current_question.a,
-        		n: current_question.n
-        	}) );
-*/
-
-/*
-        	$(document).on('click', 'button[data-value]', function() {
-        		var answer = $(document).find('#the_answer').val();
-
-        		if( $(this).data('value') === answer ) {
-        			$(this).addClass('correct');
-        			$gi.points += 100;
-        			$gi.maxDamage += 1;
-        			$gi.lifeSound.play();
-
-        			$gi.refreshStats();
-        		} else {
-        			$(this).addClass('false');
-        			$gi.hurtSound.play();
-        			$gi.maxDamage += -1;
-        			$gi.refreshStats();
-        		}
-        		$('.note').removeClass('hide');
-
-        		setTimeout(function() {
-        			$('#challenge').addClass('hide');
-              $('.current-question').remove();
-
-              //$gi.castles.destroy();
-
-        			$gi.unfrozen();
-        			setTimeout( function() {
-          			$gi.challenging = false;
-          			this.challenging = false;
-        			}, 1500);
-
-        		}, 500);
-        	});
-*/
-        //}// if challenge
-
-
+        }// if challenge
       }, // challenge
+      // general update function
       update: function() {
 
       	var $gi = this;
@@ -1302,6 +1262,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       }, // add the castle after checking wraps
 
     	display_stats : function(){
+/*
         var style1 = { font: "20px Arial", fill: "#ff0"};
         var t1 = this.game.add.text(10, 20, "Score:", style1);
         t1.fixedToCamera = true;
@@ -1313,13 +1274,18 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
 
         var style2 = { font: "26px Arial", fill: "#00ff00"};
+*/
+/*
         this.pointsText = this.game.add.text(80, 18, "", style2);
         this.aliensText = this.game.add.text(this.game.width-50, 18, "", style2);
         this.shotsText = this.game.add.text(this.game.width-150, 18, "1", style2);
+*/
         this.refreshStats();
+/*
         this.pointsText.fixedToCamera = true;
         this.aliensText.fixedToCamera = true;
         this.shotsText.fixedToCamera = true;
+*/
     	},
 
       create_weapons : function(){
@@ -1343,7 +1309,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     			$gi.playerJump();
         }, this);
     		$gi.buttons.up.fixedToCamera = true;
-        $gi.buttons.up.scale.setTo( 1.5, 1.5 );
+        $gi.buttons.up.scale.setTo( 2, 2 );
         $gi.buttons.up.onInputDown.add(function(e ){ }, this);
         $gi.buttons.up.onInputUp.add(function(){ }, this);
 
@@ -1357,10 +1323,11 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     	    this.firing = false;
         }, this);
     		$gi.buttons.fire.fixedToCamera = true;
-        $gi.buttons.fire.scale.setTo( 1.5, 1.5 );
+        $gi.buttons.fire.scale.setTo( 2, 2 );
         $gi.buttons.fire.onInputDown.add(function(e ){ }, this);
         $gi.buttons.fire.onInputUp.add(function(){ }, this);
 
+/*
         $gi.pause_label = $gi.add.text(this.w/2, 20, 'Pause', { font: '24px Arial', fill: '#fff' });
     	$gi.pause_label.inputEnabled = true;
     	$gi.pause_label.fixedToCamera = true;
@@ -1371,14 +1338,16 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     			this.unpause();
     		}
     	}, this);
+*/
 
       },
 
       //show updated stats values
       refreshStats: function() {
-        this.pointsText.text = this.points;
-        this.aliensText.text = this.maxDamage - this.damage;
-        this.shotsText.text = this.weapon.fireLimit -  this.weapon.shots;
+        this.pointsText = this.points;
+        this.damageText = this.maxDamage - this.damage;
+        this.shotsText = this.weapon.fireLimit -  this.weapon.shots;
+        if(!$scope.$$phase) $scope.$apply();
       },
       playerHit: function(player, blockedLayer) {
         if(player.body.touching.right) {
@@ -1397,9 +1366,11 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		this.refreshStats();
       },
       //the player has just been bitten by a alien
+/*
       died: function() {
 
       },
+*/
       playerDamage: function(player, alien) {
     	  if(player.body.touching.down && alien.body.touching.up ){
     	    //remove the alien that bit our player so it is no longer in the way
@@ -1427,8 +1398,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     				this.frozen();
 
     				this.player.animations.play('stand', 10, true);
-    		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px Arial", fill: "#ff0"});
+/*
+    		    var gO = this.game.add.text((this.game.width / 2) - 50, this.game.height / 2 - 90, "Game Over", { font: "24px arcadeclassicregular", fill: "#ff0"});
     		    gO.fixedToCamera = true;
+*/
 /*
     		    gO.inputEnabled = true;
             gO.events.onInputUp.add( function() {
@@ -1436,17 +1409,21 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
             }, this);
 */
 
+/*
             var again = this.game.add.text((this.game.width / 4) - 50, this.game.height / 2, "Play Again", { font: "20px Arial", fill: "#ff0"});
     		    again.fixedToCamera = true;
     		    again.inputEnabled = true;
             again.events.onInputUp.add( function() {
                 this.state.start('Game');
             }, this);
+*/
 
+/*
             var score = this.game.add.text((this.game.width / 2) + 50, this.game.height / 2, "Your Score: " + this.points, { font: "20px Arial", fill: "#ff0"});
     		    score.fixedToCamera = true;
 
     		    console.log( 'GO: ' + this.points );
+*/
 
 
 /*
@@ -1458,9 +1435,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     				$gi.start_new.fixedToCamera = true;
     		    $gi.start_new.scale.setTo( 1.5, 1.5 );
 */
+            this.gameOver = true;
+            if(!$scope.$$phase) $scope.$apply();
 
-
-           if( LBS.checkHighScore(this.points))  this.saveHighScore();
+            if( LBS.checkHighScore(this.points))  this.saveHighScore();
     				return false;
     			}
 
@@ -1540,11 +1518,13 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         WS.set_weapon( weapon.ref.id , this );
       },
     	// you lost. dang.
+/*
       gameOver: function() {
         this.music.stop();
         this.gameOverSound.play();
         this.game.state.start('Game');
       },
+*/
       playerJump: function() {
         //when the ground is a sprite, we need to test for "touching" instead of "blocked"
         if(this.player.body.touching.down) {
@@ -1648,11 +1628,29 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       render: function()
         {
             //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-        }
+        },
 
+      restart: function(){
+        this.state.start('Game');
+      },
+      pause_and_show_menu: function(){
+        $scope.menu_open = $scope.menu_open ? false : true;
+      	if( this.stopped !== true ) {
+      		this.pause();
+      	} else {
+      		this.unpause();
+      	}
+      },
+      quit : function(){
+        this.game.sound.mute = true;
+        $state.go('app')
+      }
     }// END GAME
-    //$scope.game.saveHighScore();
   }// END create_game
+
+
+
+
 
 
 
