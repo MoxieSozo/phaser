@@ -63,6 +63,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
     		this.player.animations.add('stand', [2,3], 3, true);
 
 
+
+
     		//create the aliens
     		this.generateAliens();
     		//and the toy mounds
@@ -242,6 +244,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
 
       },
       toggle_sound : function(){
+        alert( this.game.sound.mute )
         if( this.game.sound.mute === false ) {
            this.game.sound.mute = true;
         } else {
@@ -378,7 +381,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
         //collision
         this.game.physics.arcade.collide(this.player, this.ground, this.playerHit, null, this);
         this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, function(player, alien){ return alien.alive; }, this);
-        this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
+        this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, function(player, alien){ return alien.alive; }, this );
         this.game.physics.arcade.collide(this.weapon.bullets, this.ground, this.shatter, null, this );
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
       	this.game.physics.arcade.overlap(this.player, this.weapons, this.weaponUp, null, this);
@@ -587,10 +590,11 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
       },
       alienKilled : function(bullet, alien){
         this.explodeSound.play();
-        alien.play( 'die')
         alien.alive = false;
-        //alien.body.moves = false;
-        //this.aliens.remove( alien );
+        alien.loadTexture('explode');
+        alien.body.setSize(50, 125);
+        alien.animations.add('die', null, 10);
+        alien.animations.play('die');
         bullet.kill();
     		this.points += 1;
     		this.refreshStats();
@@ -840,6 +844,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
         this.aliens = this.game.add.group();
         this.aliens.enableBody = true;
     	  this.numAliens += 1;
+        var explodeTexture = this.game.cache.getImage('explode');
         for (var i = 0; i < this.numAliens; i++) {
           var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
           var y = this.game.rnd.integerInRange(this.game.height - 100, this.game.world.height - this.game.height );
@@ -848,7 +853,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
 
           alien = this.aliens.create(x, y, 'alien');
           alien.alive = true;
-    			alien.animations.add('die', null, 10);
+
+
+
+    			//
           alien.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
           alien.body.immovable = true;
           alien.body.collideWorldBounds = false;
