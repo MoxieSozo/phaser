@@ -1587,18 +1587,35 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       render: function()
         {
             //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-        }
+        },
+
+      restart: function(){
+        this.state.start('Game');
+      },
+      pause_and_show_menu: function(){
+        $scope.menu_open = $scope.menu_open ? false : true;
+      	if( this.stopped !== true ) {
+      		this.pause();
+      	} else {
+      		this.unpause();
+      	}
+      },
+      quit : function(){
+        this.game.sound.mute = true;
+        $state.go('app')
+      }
+
+
+
 
     }// END GAME
     //$scope.game.saveHighScore();
   }// END create_game
 
 
-  $scope.pause_and_show_menu = function(){
-    alert( 'pause the game')
-    $scope.menu_open = $scope.menu_open ? false : true;
-		$scope.game.pause();
-  }
+
+
+
 
 
 
