@@ -30,7 +30,7 @@ angular.module( 'app.services')
         //load game assets
         this.load.spritesheet('hunter', 'assets/images/astronaut.sprite.png', 50,50);
         this.load.spritesheet('alien', 'assets/images/explode.png', 50,100);
-        this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
+        this.load.spritesheet('buttons', 	'assets/images/buttons.png', 128, 128);
         this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
         this.load.image('background', 'assets/images/background.png');
         this.load.image('cloud1', 'assets/images/cloud-1.png');

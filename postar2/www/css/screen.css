@@ -22,7 +22,7 @@
 #app-nav {
   position: fixed;
   left: calc(50% - 12.5vw);
-  top: -120px;
+  top: -140px;
   width: 25vw;
   z-index: 1000000;
   text-align: center;
@@ -39,10 +39,11 @@
   font-weight: bold;
   padding: 5px;
   color: white;
+  font-size: 12px !important;
 }
 #app-nav button {
   position: relative;
-  bottom: -30px;
+  bottom: -15px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   outline: none;
@@ -89,10 +90,22 @@ a {
   text-decoration: none;
 }
 * {
-  font-family: "arcadeclassicregular" !important;
+  font-family: "our_arcade_gamesregular" !important;
 }
+/*
+body{
+  font-size:90%;
+}
+*/
 .button-positive {
   background: #014382 !important;
+}
+button.positive,
+a.positive {
+  color: #014382 !important;
+}
+.button.disabled {
+  opacity: .5;
 }
 /* Empty. Add your own CSS if you like */
 body {
@@ -126,7 +139,7 @@ body {
 .challenge-modal .castle {
   position: absolute;
   right: 70px;
-  bottom: -12px;
+  bottom: -10px;
   z-index: 1;
 }
 .challenge-modal .castle img {
@@ -169,6 +182,9 @@ body {
   background-size: 60% 60%;
   background-repeat: no-repeat;
 }
+.challenge-modal .inside b {
+  font-size: 10px;
+}
 .challenge-modal .inside .bar {
   position: absolute;
   top: 0;
@@ -181,6 +197,7 @@ body {
   background: #014382;
 }
 .challenge-modal .inside .bar h4 {
+  font-size: 12px;
   width: 100%;
   text-align: center;
   color: white;
@@ -191,7 +208,7 @@ body {
   position: absolute;
   top: 0;
   width: 100vw;
-  font-size: 17px;
+  font-size: 14px;
   color: white;
   padding-right: 20px;
   padding-left: 20px;
