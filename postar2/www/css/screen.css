@@ -91,6 +91,9 @@ a {
 * {
   font-family: "arcadeclassicregular" !important;
 }
+.button-positive {
+  background: #014382 !important;
+}
 /* Empty. Add your own CSS if you like */
 body {
   padding: 0px;

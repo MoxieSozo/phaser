@@ -8,17 +8,25 @@
 	  </div>
 	  <div class = 'hunter'> </div>
   	<div class = 'my_answer bar bar-dark'>
-  		<h4>New High Score!</h4>
+  		<h4>New High Score: {{ game.points }} Points!</h4>
   	</div>
-  	<h2>{{ game.points }}</h2>
-  	<form id="save-high-score" ng-submit="game.submitHighScore">
-		  <input type="text" ng-model="game.initials" class="" placeholder="Enter yor initials" maxlength="3">
-		  <button type="submit" class="button-positive"><b>Save</b></button>
+  	<p ng-hide = 'game.highScoreSaved'>Save your score for eternal glory!</p>
+  	<form id="save-high-score" ng-submit="game.submitHighScore()">
+    	<div class = 'row'>
+      	<div class = 'col'>
+          <label class="item item-input">
+            <input type="text" ng-model="game.initials" class="" placeholder="Enter yor initials" maxlength="3">
+          </label>
+      	</div>
+      	<div class = 'col'>
+          <button type="submit" class="button button button-positive" ng-class="{game.savingScore || game.initials.length < 2 ? 'disabled' : ''}" ng-disabled = "game.savingScore || game.initials.length < 2"><b>Save {{game.savingScore || game.initials.length !  2 ? 'disabled' : ''}}</b></button>
+      	</div>
+    	</div>
   	</form>
 		<ol class="high-scores">
 			<li ng-repeat='( k, v ) in highScores'>
 			    <i  ng-show="k < 3">  {{v.name}} ... {{v.score}}</i>
 		</ol>
-		<p><a class = "" ui-sref="leader-board">View Leaderboard</a></p>
+		<p><a class = "positive" ng-click="game.closeScoreModal('leaderboard')">View  Leaderboard</a></p>
   </div>
 </div>

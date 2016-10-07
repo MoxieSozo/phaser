@@ -781,8 +781,8 @@ function($scope, $http, AS){
 }])
 
 angular.module( 'app.controllers' )
-.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService', "LeaderBoardService",'$ionicPopup', '$state', '$ionicModal',
-function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
+.controller( 'GameController', ['$scope', '$http', 'AppService','GameService', 'TriviaService', 'WeaponService', "LeaderBoardService",'$ionicPopup', '$state', '$ionicModal', '$timeout',
+function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, $timeout){
 
 
   $ionicModal.fromTemplateUrl('templates/challenge-modal.html', {
@@ -1473,8 +1473,22 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     	  }
       },
       submitHighScore: function() {
-        LBS.saveScore( $scope.game.initials, $scope.game.points );
+        LBS.saveScore( $scope.game.initials, $scope.game.points ).then(function(){
+          $scope.game.highScoreSaved = true;
+          $timeout(function(){
+            $scope.game.closeScoreModal();
+          }, 1000)
+        });
 
+
+      },
+      // close the score modal + reset the saved status
+      closeScoreModal: function( $goto ){
+        $goto = $goto || false;
+        $scope.game.highScoreSaved = true;
+        $scope.scoreModal.hide().then(function(){
+          if($goto ) $state.go($goto );
+        })
       },
       // let the user save their score
       saveHighScore : function(){
