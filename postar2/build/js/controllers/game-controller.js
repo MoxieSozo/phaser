@@ -365,7 +365,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
 
         //collision
         this.game.physics.arcade.collide(this.player, this.ground, this.playerHit, null, this);
-        this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, null, this);
+        this.game.physics.arcade.collide(this.player, this.aliens, this.playerDamage, function(player, alien){ return alien.alive; }, this);
         this.game.physics.arcade.collide(this.weapon.bullets, this.aliens, this.alienKilled, null, this );
         this.game.physics.arcade.collide(this.weapon.bullets, this.ground, this.shatter, null, this );
       	this.game.physics.arcade.overlap(this.player, this.hops, this.collectHops, null, this);
@@ -575,7 +575,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
       },
       alienKilled : function(bullet, alien){
         this.explodeSound.play();
-        this.aliens.remove( alien );
+        alien.play( 'die')
+        alien.alive = false;
+        //alien.body.moves = false;
+        //this.aliens.remove( alien );
         bullet.kill();
     		this.points += 1;
     		this.refreshStats();
@@ -799,31 +802,26 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         }
 
       },
+      // add the enemies
       generateAliens: function() {
         var alien;
         this.aliens = this.game.add.group();
-
-        //enable physics in them
         this.aliens.enableBody = true;
-
-        //phaser's random number generator
     	  this.numAliens += 1;
-
         for (var i = 0; i < this.numAliens; i++) {
-          //add sprite within an area excluding the beginning and ending
-          //  of the game world so items won't suddenly appear or disappear when wrapping
           var x = this.game.rnd.integerInRange(this.game.width, this.game.world.width - this.game.width);
           var y = this.game.rnd.integerInRange(this.game.height - 100, this.game.world.height - this.game.height );
-          alien = this.aliens.create(x, y, 'alien');
 
-          //physics properties
+
+
+          alien = this.aliens.create(x, y, 'alien');
+          alien.alive = true;
+    			alien.animations.add('die', null, 10);
           alien.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
-          alien.scale.setTo(.5, .5);
           alien.body.immovable = true;
           alien.body.collideWorldBounds = false;
         }
       },
-
       // create weapons to collect
       generateNewWeapon: function() {
         var weapon;
@@ -835,7 +833,6 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
         weapon = this.weapons.create(x, y, 'pint');
         weapon.ref = weaponRef;
         weapon.body.velocity.x = this.game.rnd.integerInRange(-20, 0);
-        weapon.scale.setTo(1, 1);
         weapon.body.immovable = true;
         weapon.body.collideWorldBounds = false;
       },

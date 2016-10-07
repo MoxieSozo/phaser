@@ -209,8 +209,11 @@ body {
   width: 100vw;
   height: 100vh;
   text-align: center;
-  padding-top: 40vh;
+  padding-top: 35vh;
   color: white;
+}
+.game-over-container div {
+  padding: 8px;
 }
 #challenge {
   display: block;

@@ -29,8 +29,7 @@ angular.module( 'app.services')
 
         //load game assets
         this.load.spritesheet('hunter', 'assets/images/astronaut.sprite.png', 50,50);
-        //this.load.spritesheet('playerScratch', 'assets/images/dog_scratch.png', 116, 100, 2);
-        //this.load.spritesheet('playerDig', 'assets/images/dog_dig.png', 129, 100, 2);
+        this.load.spritesheet('alien', 'assets/images/explode.png', 50,100);
         this.load.spritesheet('buttons', 	'assets/images/buttons.png', 32, 32);
         this.load.spritesheet('hop', 'assets/images/hop.png', 32, 32, 6);
         this.load.image('background', 'assets/images/background.png');
@@ -43,7 +42,6 @@ angular.module( 'app.services')
         this.load.image('ground', 'assets/images/ground.png');
         this.load.image('grass', 'assets/images/grass.png');
         this.load.image('castle', 'assets/images/castle.png');
-        this.load.audio('damage', ['assets/audio/whine.ogg', 'assets/audio/whine.mp3']);
 
 
         this.load.audio('blip', ['assets/audio/blip.wav']);
@@ -65,7 +63,6 @@ angular.module( 'app.services')
 
         //this.load.image('mound', 'assets/images/rock.png');
 
-        this.load.image('alien', 'assets/images/alien.png');
         this.load.image('bone', 'assets/images/toys/bone.png');
         this.load.image('ball', 'assets/images/toys/tennisball.png');
       },
