@@ -137,8 +137,8 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal, 
     		this.build_buttons( );
 
     		// debug for highscores
-    		this.frozen();
-    		this.saveHighScore();
+    		//this.frozen();
+    		//this.saveHighScore();
 
         //this.challenge();
 
