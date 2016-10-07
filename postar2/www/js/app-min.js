@@ -791,6 +791,12 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     $scope.challengeModal = modal;
   });
 
+  $ionicModal.fromTemplateUrl('templates/score-modal.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.scoreModal = modal;
+  });
+
 
 
   function create_game(){
@@ -911,6 +917,10 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     		var $gi = this;
 
     		this.build_buttons( );
+
+    		// debug for highscores
+    		this.frozen();
+    		this.saveHighScore();
 
         //this.challenge();
 
@@ -1460,12 +1470,17 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
     				//$gi.player.body.velocity.x = 300;
     				this.unfrozen();
     	    }, this);
-
-
     	  }
+      },
+      submitHighScore: function() {
+        LBS.saveScore( $scope.game.initials, $scope.game.points );
+
       },
       // let the user save their score
       saveHighScore : function(){
+         $scope.highScores = LBS.leaders;
+         $scope.scoreModal.show();
+/*
          $ionicPopup.show({
            template: '<input type="text" ng-model="game.initials">',
            title: 'New High Score!',
@@ -1501,6 +1516,7 @@ function($scope, $http, AS, GS, TS, WS, LBS, $ionicPopup, $state , $ionicModal){
               ],
              })
          })
+*/
       },
       //the player is collecting a toy from a mound
       collectHops: function(player, hop) {
